@@ -2,7 +2,7 @@ import './ComputerScreen.css'
 import { useState, useRef, useEffect } from 'react'
 import monitorBorder from '../assets/monitorbackground.png'
 
-function ComputerScreen() {
+function ComputerScreen({ screenControl }) {
 
   //Allows access to the input element
   const inputRef = useRef(null);
@@ -10,8 +10,37 @@ function ComputerScreen() {
   //Allows access to terminal div element
   const terminalRef = useRef()
 
+  //        .-"""-.__     ltb
+  //     /      ' o'\
+  //  ,-;  '.  :   _c
+  // :_."\._ ) ::-"
+  //        ""m "m
+
+  const starterText = `
+  _____ _     _                         ____   _____ 
+ / ____| |   (_)                       / __ \\ / ____|  }      .-"""-.__
+| (___ | |__  ___   ____ _ _ __ ___   | |  | | (___    }     /      ' o'\\
+ \\___ \\| '_ \\| \\ \\ / / _\` | '_ \` _ \\  | |  | |\\___ \\   }  ,-;  '.  :   _c 
+ ____) | | | | |\\ V / (_| | | | | | | | |__| |____) |  } :_."\\._ ) ::-"
+|_____/|_| |_|_| \\_/ \\__,_|_| |_| |_|  \\____/|_____/   }        ""m "m      
+
+              S H I V A M _ O S
+              -----------------
+                 Version 1.0
+
+[    ${(Math.random()).toFixed(5)}] Shivam_OS kernel starting...
+[    ${(Math.random()).toFixed(5)}] Memory detected: 16384 MB
+[    ${(Math.random()).toFixed(5)}] Initializing keyboard...       [ OK ]
+[    ${(Math.random()).toFixed(5)}] Mounting filesystem...         [ OK ]
+[    ${(Math.random()).toFixed(5)}] Starting Shivam Shell...       [ OK ]
+[    ${(Math.random()).toFixed(5)}] System initialization complete.
+
+Welcome to shivam_os v1.0.
+Type 'help' to see available commands.
+Type 'exit' to shut down.`
+
   //Tracks history of console
-  const [history, setHistory] = useState([{ type: 'output', content: "Welcome to shivam_os v1.0. Type 'help' to see available commands." }]);
+  const [history, setHistory] = useState([{ type: 'output', content: <span style={{ whiteSpace: "pre-wrap" }}>{starterText}</span> }]);
 
   //Tracks current input
   const [input, setInput] = useState('');
@@ -101,7 +130,8 @@ function ComputerScreen() {
             resume    -Download my resume<br></br>
             contact   -Get Contact Info <br></br>
             theme     -Modify Terminal Color Theme <br></br>
-            clear     -Clear Screen
+            clear     -Clear Screen <br></br>
+            exit      -Shut Down
           </div>
 
         case 'whoami':
@@ -146,7 +176,8 @@ function ComputerScreen() {
 
 
           </div>
-
+        case 'exit':
+          screenControl("off");
         default:
           return <div>
             Command Not Found {":("}
@@ -161,7 +192,7 @@ function ComputerScreen() {
       const fixedInput = input.trim().toLowerCase();
 
       if (fixedInput === 'clear') {
-        newHistory = [{ type: 'output', content: "Welcome to shivam_os v1.0. Type 'help' to see available commands." }]
+        newHistory = [{ type: 'output', content: "Welcome to shivam_os v1.0.\n Type 'help' to see available commands." }]
       }
 
       else if (!fixedInput) {

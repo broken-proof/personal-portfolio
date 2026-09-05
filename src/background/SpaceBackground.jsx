@@ -56,7 +56,7 @@ function SpaceBackground() {
     scene.add(universe);
 
     //Modification Variables
-    const acceleration = 0.4;
+    const acceleration = 0.2;
 
     //Add fog for better zoom in effect
     scene.background = new THREE.Color('#0a0a16');
