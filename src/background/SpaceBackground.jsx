@@ -1,6 +1,7 @@
 import { useMemo, useEffect, useRef } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import Retro from '../ComputerScreen/Retro.jsx'
+import { OrbitControls, Environment } from '@react-three/drei'
 import './background.css'
 import * as THREE from 'three'
 
@@ -38,7 +39,9 @@ function StarField() {
     }
 
     posAttribute.needsUpdate = true;
-    state.camera.rotation.z += 0.0015;
+    if (pointsRef.current) {
+      pointsRef.current.rotation.z += 0.0015;
+    }
   })
 
   return (
@@ -64,19 +67,34 @@ function StarField() {
 }
 
 const targetVec = new THREE.Vector3();
+const computerPos = new THREE.Vector3(0, -3, 38);
 
-function CameraRig({ screen }) {
+function CameraRig({ screen, controlsRef }) {
   useFrame((state) => {
-    // Update the vector's coordinates based on state
+    if (!controlsRef.current) return;
+
     if (screen === "on") {
-      targetVec.set(0, -0.5, 42);
-    } else {
-      targetVec.set(0, 0, 50);
+      // Instantly disable controls when zooming in
+      if (controlsRef.current) controlsRef.current.enabled = false;
+
+      targetVec.set(0, -2, 42.5);
+      state.camera.position.lerp(targetVec, 0.05);
+      state.camera.lookAt(0, -2, 38);
     }
+    else {
+      targetVec.set(0, 0, 50);
+      const distance = state.camera.position.distanceTo(targetVec);
 
-    // Smoothly interpolate the camera position toward the target
-    state.camera.position.lerp(targetVec, 0.05);
-
+      // ONLY override the camera while traveling
+      if (distance > 0.5) {
+        state.camera.position.lerp(targetVec, 0.05);
+        state.camera.lookAt(computerPos);
+      } else {
+        // Once arrived, hand FULL control back to OrbitControls
+        // and stop injecting manual lookAt commands
+        controlsRef.current.enabled = true;
+      }
+    }
   });
 
   return null;
@@ -84,20 +102,38 @@ function CameraRig({ screen }) {
 
 
 function SpaceBackground({ screen, screenControl }) {
-
-
-
+  const cameraControls = useRef();
 
   return (
     <div className="background_div">
       <Canvas camera={{ position: [0, 0, 50], fov: 60 }}>
-        <CameraRig screen={screen}></CameraRig>
+        <CameraRig controlsRef={cameraControls} screen={screen}></CameraRig>
+        <OrbitControls
+          ref={cameraControls}
+          target={[0, -3, 38]}
+          enablePan={false}
+          enabled={screen === "off"}
+          minDistance={10}
+          maxDistance={70}
+        >
+
+        </OrbitControls>
+
         <color attach="background" args={['#10091b']}></color>
         <fogExp2 attach="fog" args={['#0d1033', 0.02]}></fogExp2>
         <StarField />
         <ambientLight intensity={1.5}></ambientLight>
         <directionalLight position={[10, 10, 10]} intensity={2} />
-        <Retro position={[0, -2, 36]} scale={4} screenControl={screenControl}></Retro>
+        <Environment preset="night"></Environment>
+
+        <Retro
+          position={[0, -3, 38]}
+          scale={5}
+          screenControl={screenControl}
+          rotation={[0, Math.PI * 1.5, 0]}
+        ></Retro>
+
+
       </Canvas>
     </div>
   )

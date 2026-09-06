@@ -37,7 +37,7 @@ function ComputerScreen({ screenControl }) {
 
 Welcome to shivam_os v1.0.
 Type 'help' to see available commands.
-Type 'exit' to shut down.`
+Type 'exit' or press ESC to shut down.`
 
   //Tracks display of console
   const [displayLines, setDisplayLines] = useState([{ type: 'output', content: <span style={{ whiteSpace: "pre-wrap" }}>{starterText}</span> }]);
@@ -300,14 +300,20 @@ Type 'exit' to shut down.`
     })
   }, [displayLines])
 
+  function handleTerminalPresses(e) {
+    if (e.key === "Escape") {
+      screenControl("off")
+    }
+  }
+
   return (
 
     <div className="monitor">
-      <div data-theme={theme} className="glass" style={{ borderImageSource: `url(${monitorBorder})` }}>
+      <div data-theme={theme} className="glass" >
 
         <div className="crt">
 
-          <div ref={terminalRef} className="terminal" onClick={focusOnInput}>
+          <div onKeyDown={handleTerminalPresses} ref={terminalRef} className="terminal" onClick={focusOnInput}>
 
             {/* Render all lines within the history */}
             {

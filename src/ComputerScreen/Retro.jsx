@@ -7,40 +7,45 @@ Source: https://sketchfab.com/3d-models/retro-computer-f844c0357d284fd8baa1435e9
 Title: Retro computer
 */
 
-import { useFrame } from '@react-three/fiber'
-import { useGLTF, Float, PresentationControls } from '@react-three/drei'
+import { useEffect } from 'react'
+import { useGLTF, Center } from '@react-three/drei'
 import * as THREE from 'three'
 
 export default function Retro({ screenControl, ...props }) {
   const { nodes, materials } = useGLTF('/computer.glb')
 
-  return (
-    <PresentationControls
-      global={false}
-      cursor={true}
-      snap={true}
-      speed={1.5}
-      polar={[-0.1, 0.2]}
-      azimuth={[-0.5, 0.5]}
-    >
+  useEffect(() => {
+    Object.values(materials).forEach((material) => {
+      material.transparent = false;
+      material.opacity = 1;
+      material.depthWrite = true;
+      // THREE.DoubleSide forces the engine to draw the inside of the box as well
+      material.side = THREE.DoubleSide;
+      material.needsUpdate = true;
+    });
+  }, [materials]);
 
-      <group {...props} dispose={null}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (screenControl) screenControl("on");
-        }}
-        onPointerOver={() => { document.body.style.cursor = 'pointer' }}
-        onPointerOut={() => { document.body.style.cursor = 'auto' }}
-      >
+  return (
+
+
+    <group {...props} dispose={null}
+      onClick={(e) => {
+        e.stopPropagation();
+        if (screenControl) screenControl("on");
+      }}
+      onPointerOver={() => { document.body.style.cursor = 'pointer' }}
+      onPointerOut={() => { document.body.style.cursor = 'auto' }}
+    >
+      <Center>
+
         <group rotation={[-Math.PI / 2, 0, 0]}>
           <group rotation={[Math.PI / 2, 0, 0]}>
             <mesh geometry={nodes.defaultMaterial.geometry} material={materials.Part2} />
             <mesh geometry={nodes.defaultMaterial_1.geometry} material={materials.Part1} />
           </group>
         </group>
-      </group>
-
-    </PresentationControls>
+      </Center>
+    </group>
   )
 }
 
