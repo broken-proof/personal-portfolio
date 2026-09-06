@@ -39,14 +39,17 @@ Welcome to shivam_os v1.0.
 Type 'help' to see available commands.
 Type 'exit' to shut down.`
 
-  //Tracks history of console
-  const [history, setHistory] = useState([{ type: 'output', content: <span style={{ whiteSpace: "pre-wrap" }}>{starterText}</span> }]);
+  //Tracks display of console
+  const [displayLines, setDisplayLines] = useState([{ type: 'output', content: <span style={{ whiteSpace: "pre-wrap" }}>{starterText}</span> }]);
+
+  //Invisible History of console
+  const [history, setHistory] = useState([{ type: 'command', content: "" }]);
 
   //Tracks current input
   const [input, setInput] = useState('');
 
-  //Variable for final returned history
-  let newHistory = [];
+  //Tracks command index
+  const [commandIndex, setCommandIndex] = useState(0);
 
   //Variable for screen color theme
   const [theme, setTheme] = useState("amber")
@@ -126,10 +129,12 @@ Type 'exit' to shut down.`
           return <div style={{ whiteSpace: "pre-wrap" }}>
             AVAILABLE COMMANDS:<br></br>
             help      -Display this message<br></br>
+            contact   -Get Contact Info <br></br>
             whoami    -Brief Introduction and bio<br></br>
             resume    -Download my resume<br></br>
-            contact   -Get Contact Info <br></br>
             theme     -Modify Terminal Color Theme <br></br>
+            projects  -View some cool creations <br></br>
+            puzzle    -Challenge yourself<br></br>
             clear     -Clear Screen <br></br>
             exit      -Shut Down
           </div>
@@ -159,6 +164,19 @@ Type 'exit' to shut down.`
             LinkedIn: <a style={{ color: "inherit" }} target="_blank" href='https://www.linkedin.com/in/shivam-murawala-b9141829b/'>linkedin.com/in/shivam-murawala-b9141829b/</a>
           </div>
 
+        case 'projects':
+          return <div style={{ whiteSpace: "pre-wrap" }}>
+            {"<<<"} PROJECT CATALOG {">>>"} <br></br>
+
+            Click Project to View:<br></br>
+            <ul>
+              <li><a style={{ color: "inherit" }} target="_blank" href='https://github.com/broken-proof/Raylib-Game-of-Life-Simulator'>Game_Of_Life_Simulator</a>  - Cellular Automaton made with C++ and Raylib</li>
+              <li><a style={{ color: "inherit" }} target="_blank" href='https://github.com/broken-proof/Refurnish'>Refurnish</a>               - Design your room like it's a 3D model</li>
+              <li><a style={{ color: "inherit" }} target="_blank" href='https://github.com/broken-proof/personal-portfolio'>Shivam_os</a>               - Cool portfolio site made with React</li>
+            </ul>
+            <br></br>
+          </div>
+
         case 'theme':
           return <div style={{ whiteSpace: "pre-wrap" }}>
             {"<<<"} SYSTEM DISPLAY MANAGER {">>>"} <br></br>
@@ -173,11 +191,13 @@ Type 'exit' to shut down.`
             <br></br>
             Usage: theme {"<color_name>"} <br></br>
             Example: theme synthwave
-
-
           </div>
+
+
         case 'exit':
           screenControl("off");
+
+
         default:
           return <div>
             Command Not Found {":("}
@@ -188,43 +208,70 @@ Type 'exit' to shut down.`
 
   //Function to handle user inputs for input field
   function handleInput(element) {
+    let newDisplay = [];
     if (element.key === "Enter") {
+      console.log(history);
       const fixedInput = input.trim().toLowerCase();
 
       if (fixedInput === 'clear') {
-        newHistory = [{ type: 'output', content: "Welcome to shivam_os v1.0.\n Type 'help' to see available commands." }]
+        newDisplay = [{ type: 'output', content: "Welcome to shivam_os v1.0.\n Type 'help' to see available commands." }]
       }
 
       else if (!fixedInput) {
-        //Add to history always
-        //Always add input to new History first
-        for (const command of history) {
-          newHistory.push(command)
-        }
-        newHistory.push({ type: 'command', content: fixedInput });
+        //Add to display always
+        //Always add input to new display first
+        newDisplay = [...displayLines, { type: 'command', content: fixedInput }]
 
       }
       else {
         //Always add input to new History first
-        for (const command of history) {
-          newHistory.push(command)
-        }
-        newHistory.push({ type: 'command', content: fixedInput });
+        newDisplay = [...displayLines, { type: 'command', content: fixedInput }]
+
+        //Add to command history
+        setHistory([...history, { type: 'command', content: fixedInput }])
 
         //Process the non-empty input
         const output = processCommand(fixedInput);
 
         //If a proper output was generated, then add to the history
         if (output) {
-          newHistory.push({ type: 'output', content: output })
+          newDisplay.push({ type: 'output', content: output })
         }
+
       }
 
       //Update history and input usestates
-      setHistory(newHistory);
+      setDisplayLines(newDisplay);
       setInput("");
     }
 
+    else if (element.key === "ArrowDown") {
+      element.preventDefault();
+
+      if (commandIndex > 0) {
+        const newIndex = commandIndex - 1;
+
+        setCommandIndex(newIndex);
+
+        if (newIndex === 0) {
+          setInput("");
+        } else {
+          setInput(history[history.length - newIndex].content);
+        }
+      }
+
+    }
+
+    else if (element.key == "ArrowUp") {
+      element.preventDefault();
+
+      if (commandIndex < history.length) {
+        const newIndex = commandIndex + 1;
+
+        setCommandIndex(newIndex);
+        setInput(history[history.length - newIndex].content);
+      }
+    }
   }
 
   //Function to focus back on input when any part of the terminal is clicked
@@ -251,7 +298,7 @@ Type 'exit' to shut down.`
         behavior: 'smooth'
       });
     })
-  }, [history])
+  }, [displayLines])
 
   return (
 
@@ -264,7 +311,7 @@ Type 'exit' to shut down.`
 
             {/* Render all lines within the history */}
             {
-              history.map((line, index) => (
+              displayLines.map((line, index) => (
                 <div key={index} >
                   {
                     line.type === 'command' ? (

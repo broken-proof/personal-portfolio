@@ -202,7 +202,7 @@
   text-shadow: 0 0 5px var(--shadow-color), 0 0 10px var(--shadow-color);
 
   transition: all 0.2s ease;
-  font-size: 0.9 rem;
+  font-size: 0.8rem;
   font-weight: 550;
 
   -webkit-font-smoothing: none;
