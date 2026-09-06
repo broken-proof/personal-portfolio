@@ -36,6 +36,8 @@
 }
 
 .monitor {
+  animation: fade 2s ease-in-out forwards;
+
   position: absolute;
   top: 50%;
   left: 50%;
@@ -70,6 +72,21 @@
   image-rendering: pixelated;
   overflow: hidden;
   box-sizing: border-box;
+}
+
+/* Fade animation */
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 .crt {

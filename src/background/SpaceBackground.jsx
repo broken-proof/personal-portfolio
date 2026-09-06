@@ -1,41 +1,16 @@
-import { useEffect, useRef } from 'react'
+import { useMemo, useEffect, useRef } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+import Retro from '../ComputerScreen/Retro.jsx'
 import './background.css'
 import * as THREE from 'three'
 
-function SpaceBackground() {
+function StarField() {
+  const pointsRef = useRef();
+  const count = 5000;
+  const distance = 50;
+  const acceleration = 0.4;
 
-  //Target <three_canvas> using reference
-  const threeCanvasRef = useRef(null);
-
-  //useEffect hook for Three.js processes running in bg
-  useEffect(() => {
-    //Exit if there's issue with canvas object
-    if (!threeCanvasRef.current) return
-
-    //SETUP STUFFS FOR THREEJS
-    const distance = 50;
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
-    camera.position.z = distance;
-
-
-    const renderer = new THREE.WebGLRenderer({
-      canvas: threeCanvasRef.current,
-      antialias: true
-    });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-
-
-    //MAKE STARS
-
-    // //testcanvas
-    // const geo = new THREE.BoxGeometry(2, 2, 1);
-    // const mat = new THREE.MeshBasicMaterial({ color: 0x00af88 });
-    // const cube = new THREE.Mesh(geo, mat);
-    // scene.add(cube);
-
-
-    const count = 5000;
+  const positions = useMemo(() => {
     const positions = new Float32Array(count * 3);
     for (let i = 0; i < count * 3; i += 3) {
       positions[i] = (Math.random() - 0.5) * 50;
@@ -43,71 +18,87 @@ function SpaceBackground() {
       positions[i + 2] = -150 + (Math.random() - 0.5) * 200;
     }
 
-    //Adding stars to scene
-    const starGeo = new THREE.BufferGeometry();
-    starGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    const starMat = new THREE.PointsMaterial({
-      size: 0.07,
-      color: 0xe4c9f5,
-      transparent: true,
-      sizeAttenuation: true
-    })
-    const universe = new THREE.Points(starGeo, starMat);
-    scene.add(universe);
+    return positions;
+  }, [])
 
-    //Modification Variables
-    const acceleration = 0.2;
+  useFrame((state) => {
+    if (!pointsRef.current) return;
 
-    //Add fog for better zoom in effect
-    scene.background = new THREE.Color('#0a0a16');
-    scene.fog = new THREE.FogExp2('#0a0a16', 0.02);
+    const posAttribute = pointsRef.current.geometry.attributes.position;
+    const posArray = posAttribute.array;
 
-    //ANIMATION LOOP
-    let frameId;
+    for (let i = 0; i < count * 3; i += 3) {
+      posArray[i + 2] += acceleration;
 
-    const animate = () => {
-      //initialize local positions array
-      const positions = starGeo.attributes.position.array;
-
-      for (let i = 0; i < count * 3; i += 3) {
-        //first move stars towards camera (z-axis)
-        positions[i + 2] += acceleration;
-
-        //If star moves past camera, reset
-        if (positions[i + 2] > distance) {
-
-          //Reset to random location in range to avoid block-like visual
-          positions[i + 2] = -100 - Math.random() * 50;
-
-          //randomize x,y again during reset
-          positions[i] = (Math.random() - 0.5) * 50;
-          positions[i + 1] = (Math.random() - 0.5) * 50;
-        }
+      if (posArray[i + 2] > distance) {
+        posArray[i + 2] = -100 - Math.random() * 50;
+        posArray[i] = (Math.random() - 0.5) * 50;
+        posArray[i + 1] = (Math.random() - 0.5) * 50;
       }
-
-      //animate next frame then call function again recursively
-      starGeo.attributes.position.needsUpdate = true;
-      renderer.render(scene, camera);
-      frameId = requestAnimationFrame(animate);
-      //rotate camera for space spinnning effect
-      camera.rotation.z = camera.rotation.z += 0.0015;;
     }
 
-    animate();
+    posAttribute.needsUpdate = true;
+    state.camera.rotation.z += 0.0015;
+  })
 
-    //ADD resizing modifications later
+  return (
+    <points ref={pointsRef}>
+      <bufferGeometry>
+        <bufferAttribute
+          attach="attributes-position"
+          count={count}
+          array={positions}
+          itemSize={3}
+        ></bufferAttribute>
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.07}
+        color="#ead0fa"
+        transparent
+        sizeAttenuation
+      >
 
-    return () => {
-      //exit stuff for unmounting
+      </pointsMaterial>
+    </points>
+  )
+}
+
+const targetVec = new THREE.Vector3();
+
+function CameraRig({ screen }) {
+  useFrame((state) => {
+    // Update the vector's coordinates based on state
+    if (screen === "on") {
+      targetVec.set(0, -0.5, 42);
+    } else {
+      targetVec.set(0, 0, 50);
     }
-  },
-    [])
+
+    // Smoothly interpolate the camera position toward the target
+    state.camera.position.lerp(targetVec, 0.05);
+
+  });
+
+  return null;
+}
+
+
+function SpaceBackground({ screen, screenControl }) {
+
+
+
 
   return (
     <div className="background_div">
-      <canvas className="three_canvas" ref={threeCanvasRef}>
-
-      </canvas>
+      <Canvas camera={{ position: [0, 0, 50], fov: 60 }}>
+        <CameraRig screen={screen}></CameraRig>
+        <color attach="background" args={['#10091b']}></color>
+        <fogExp2 attach="fog" args={['#0d1033', 0.02]}></fogExp2>
+        <StarField />
+        <ambientLight intensity={1.5}></ambientLight>
+        <directionalLight position={[10, 10, 10]} intensity={2} />
+        <Retro position={[0, -2, 36]} scale={4} screenControl={screenControl}></Retro>
+      </Canvas>
     </div>
   )
 }
