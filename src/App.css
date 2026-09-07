@@ -1,0 +1,43 @@
+.settings_icons {
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  background-color: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-bottom: 2px solid #000000;
+  border-right: 2px solid #000000;
+  border-radius: 0;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  flex-direction: column;
+}
+
+.toolbar_button {
+  background-color: #c0c0c0;
+  border-top: 2px solid #ffffff;
+  border-left: 2px solid #ffffff;
+  border-bottom: 2px solid #000000;
+  border-right: 2px solid #000000;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+.toolbar_button:active {
+  border-top: 4px solid #000000;
+  border-left: 4px solid #000000;
+  border-bottom: 4px solid #ffffff;
+  border-right: 4px solid #ffffff;
+  padding: 9px 7px 7px 9px;
+}
+
+.pixel_icon {
+  width: 32px;
+  height: 32px;
+}

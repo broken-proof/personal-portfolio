@@ -1,10 +1,7 @@
 import './ComputerScreen.css'
-import { useState, useRef, useEffect } from 'react'
-import { useAudioManager } from '../Sounds';
+import { useState, useRef, useEffect, useEffectEvent } from 'react'
 
-function ComputerScreen({ audio, screenControl }) {
-  const playPowerOff = useAudioManager().playPowerOff;
-  const bootControls = useAudioManager().bootControls;
+function ComputerScreen({ audio, screenControl, helpRequest }) {
 
   //Allows access to the input element
   const inputRef = useRef(null);
@@ -39,7 +36,7 @@ function ComputerScreen({ audio, screenControl }) {
 
 Welcome to shivam_os v1.0.
 Type 'help' to see available commands.
-Type 'exit' or press ESC to shut down.`
+Type 'exit', or press Ctrl + D (or ⌘ + D on Mac) to shut down.`
 
   //Tracks display of console
   const [displayLines, setDisplayLines] = useState([{ type: 'output', content: <span style={{ whiteSpace: "pre-wrap" }}>{starterText}</span> }]);
@@ -198,7 +195,7 @@ Type 'exit' or press ESC to shut down.`
 
         case 'exit':
           screenControl("off");
-          playPowerOff();
+          audio.playPowerOff();
           if (audio.bootControls.sound) audio.bootControls.stop();
 
 
@@ -213,12 +210,28 @@ Type 'exit' or press ESC to shut down.`
   //Function to handle user inputs for input field
   function handleInput(element) {
     let newDisplay = [];
+
+    const r = Math.floor(Math.random() * 7);
+    switch (r) {
+      case 1:
+        audio.playKeyA()
+        break;
+      case 2:
+        audio.playKeyB()
+        break;
+      case 3:
+        audio.playKeyC()
+        break;
+
+    }
+
+
     if (element.key === "Enter") {
       console.log(history);
       const fixedInput = input.trim().toLowerCase();
 
       if (fixedInput === 'clear') {
-        newDisplay = [{ type: 'output', content: "Welcome to shivam_os v1.0.\n Type 'help' to see available commands." }]
+        newDisplay = [{ type: 'output', content: "Welcome to shivam_os v1.0.\n Type 'help' to see available commands. \n Type 'exit', or press Ctrl + D (or ⌘ + D on Mac) to shut down." }]
       }
 
       else if (!fixedInput) {
@@ -276,7 +289,38 @@ Type 'exit' or press ESC to shut down.`
         setInput(history[history.length - newIndex].content);
       }
     }
+
+    else if ((element.ctrlKey || element.metaKey) && (element.key === 'd' || element.key === 'D')) {
+      // Stop the browser from bookmarking the page
+      element.preventDefault();
+      screenControl("off")
+      if (audio.bootControls.sound) audio.bootControls.stop();
+      audio.playPowerOff()
+
+
+    }
   }
+
+  //Function for help button in main screen
+  const showHelp = useEffectEvent(() => {
+    const showHelp = () => {
+      const helpInput = "help";
+      const newCommand = { type: 'command', content: helpInput };
+      const output = processCommand(helpInput);
+      const newOutput = { type: 'output', content: output };
+
+      setDisplayLines(prev => [...prev, newCommand, newOutput]);
+      setHistory(prev => [...prev, newCommand]);
+
+      if (inputRef.current) inputRef.current.focus();
+    };
+
+    showHelp();
+  });
+
+  useEffect(() => {
+    if (helpRequest > 0) showHelp();
+  }, [helpRequest]);
 
   //Function to focus back on input when any part of the terminal is clicked
   function focusOnInput() {
@@ -305,10 +349,14 @@ Type 'exit' or press ESC to shut down.`
   }, [displayLines])
 
   function handleTerminalPresses(e) {
-    if (e.key === "Escape") {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 'd' || e.key === 'D')) {
+      // Stop the browser from bookmarking the page
+      e.preventDefault();
       screenControl("off")
       if (audio.bootControls.sound) audio.bootControls.stop();
-      playPowerOff()
+      audio.playPowerOff()
+
+
     }
   }
 
@@ -340,7 +388,7 @@ Type 'exit' or press ESC to shut down.`
             }
 
             {/* Render Active Input  */}
-            <div style={{ display: "flex", alignItems: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
               <span className='output_line'>guest@shivam-os:$ </span>
               <input ref={inputRef} onKeyDown={handleInput} className="current_input" type="text" value={input} autoFocus spellCheck="false" autoComplete="off" onChange={(element) => setInput(element.target.value)}></input>
             </div>

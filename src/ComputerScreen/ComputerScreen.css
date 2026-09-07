@@ -260,6 +260,7 @@
   text-shadow: inherit;
   font-size: inherit;
   font-weight: 550;
+  flex: 1;
 }
 
 .current_input:focus {
