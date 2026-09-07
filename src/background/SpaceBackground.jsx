@@ -101,7 +101,7 @@ function CameraRig({ screen, controlsRef }) {
 }
 
 
-function SpaceBackground({ screen, screenControl }) {
+function SpaceBackground({ audio, screen, screenControl }) {
   const cameraControls = useRef();
 
   return (
@@ -131,6 +131,7 @@ function SpaceBackground({ screen, screenControl }) {
           scale={5}
           screenControl={screenControl}
           rotation={[0, Math.PI * 1.5, 0]}
+          audio={audio}
         ></Retro>
 
 

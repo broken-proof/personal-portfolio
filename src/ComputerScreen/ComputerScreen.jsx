@@ -1,8 +1,10 @@
 import './ComputerScreen.css'
 import { useState, useRef, useEffect } from 'react'
-import monitorBorder from '../assets/monitorbackground.png'
+import { useAudioManager } from '../Sounds';
 
-function ComputerScreen({ screenControl }) {
+function ComputerScreen({ audio, screenControl }) {
+  const playPowerOff = useAudioManager().playPowerOff;
+  const bootControls = useAudioManager().bootControls;
 
   //Allows access to the input element
   const inputRef = useRef(null);
@@ -196,6 +198,8 @@ Type 'exit' or press ESC to shut down.`
 
         case 'exit':
           screenControl("off");
+          playPowerOff();
+          if (audio.bootControls.sound) audio.bootControls.stop();
 
 
         default:
@@ -303,6 +307,8 @@ Type 'exit' or press ESC to shut down.`
   function handleTerminalPresses(e) {
     if (e.key === "Escape") {
       screenControl("off")
+      if (audio.bootControls.sound) audio.bootControls.stop();
+      playPowerOff()
     }
   }
 

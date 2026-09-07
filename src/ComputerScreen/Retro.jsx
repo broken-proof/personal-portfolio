@@ -10,9 +10,11 @@ Title: Retro computer
 import { useEffect } from 'react'
 import { useGLTF, Center } from '@react-three/drei'
 import * as THREE from 'three'
+import { useAudioManager } from '../Sounds'
 
-export default function Retro({ screenControl, ...props }) {
+export default function Retro({ screenControl, audio, ...props }) {
   const { nodes, materials } = useGLTF('/computer.glb')
+  const { playPowerOn, computerBoot } = useAudioManager();
 
   useEffect(() => {
     Object.values(materials).forEach((material) => {
@@ -25,14 +27,15 @@ export default function Retro({ screenControl, ...props }) {
     });
   }, [materials]);
 
+  const handleScreenClick = (e) => {
+    e.stopPropagation();
+    if (screenControl) { screenControl("on"); audio.playPowerOn(); audio.computerBoot() }
+  }
   return (
 
 
     <group {...props} dispose={null}
-      onClick={(e) => {
-        e.stopPropagation();
-        if (screenControl) screenControl("on");
-      }}
+      onClick={handleScreenClick}
       onPointerOver={() => { document.body.style.cursor = 'pointer' }}
       onPointerOut={() => { document.body.style.cursor = 'auto' }}
     >
