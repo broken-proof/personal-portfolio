@@ -6,6 +6,26 @@ function ComputerScreen({ audio, screenControl, helpRequest, setHelpRequest }) {
   //Allows access to the input element
   const inputRef = useRef(null);
 
+
+  //Puzzle Strings
+  const puzzleAName = "aname";
+  const puzzleBName = "bname";
+  const puzzleCName = "cname";
+
+  const puzzleAAnswer = "aanswer"
+  const puzzleBAnswer = "banswer"
+  const puzzleCAnswer = "canswer"
+
+  const puzzleA = "a";
+  const puzzleB = "b";
+  const puzzleC = "c";
+
+  const puzzleHints = `
+  akfafd
+  adfjkad
+  adf;a
+  `
+
   //Allows access to terminal div element
   const terminalRef = useRef()
 
@@ -113,6 +133,88 @@ Type 'exit', or press Ctrl + D (or ⌘ + D on Mac) to shut down.`
 
         }
 
+
+      }
+      //Puzzle Attempt/Display flow
+      else if (wordList[0] === "puzzle") {
+        if (wordList[1] === "display") {
+          if (wordList.length != 3) {
+            return (<div style={{ whiteSpace: "pre-wrap" }}>
+              Invalid Command. <br></br>
+              Try 'puzzle display {"<puzzle_name>"}' or 'puzzle' for a list of available puzzles.
+            </div>)
+          }
+          else {
+            switch (wordList[2].toLowerCase()) {
+              case (puzzleAName):
+                return (<div style={{ whiteSpace: "pre-wrap" }}>
+                  {puzzleA} <br></br>
+                  {`To Attempt the Puzzle, try 'puzzle attempt ${puzzleAName} <your_answer>'`}
+                </div>)
+              case (puzzleBName):
+                return (<div style={{ whiteSpace: "pre-wrap" }}>{puzzleB}</div>)
+              case (puzzleCName):
+                return (<div style={{ whiteSpace: "pre-wrap" }}>{puzzleC}</div>)
+              default:
+                return (<div style={{ whiteSpace: "pre-wrap" }}>
+                  '{wordList[2]}' is not an available puzzle. <br></br>
+                  Try 'puzzle' for a list of available puzzles.
+                </div>)
+            }
+          }
+        }
+
+        else if (wordList[1] === "hint" && wordList.length === 2) {
+          return (<div style={{ whiteSpace: "pre-wrap" }}>
+            {puzzleHints}
+          </div>)
+        }
+
+        else if (wordList[1] === "attempt") {
+
+          if (wordList.length != 3) {
+            return (<div style={{ whiteSpace: "pre-wrap" }}>
+              Invalid Command. <br></br>
+              Try 'puzzle attempt {"<puzzle_name> <your_answer>"} ' or 'puzzle' for a list of available puzzles.
+            </div>)
+          }
+
+          else {
+            let answer;
+            switch (wordList[2]) {
+              case (puzzleAName): answer = puzzleAAnswer; break;
+              case (puzzleBName): answer = puzzleBAnswer; break;
+              case (puzzleCName): answer = puzzleCAnswer; break;
+              default:
+                return (<div style={{ whiteSpace: "pre-wrap" }}>
+                  '{wordList[2]}' is not an available puzzle. <br></br>
+                  Try 'puzzle' for a list of available puzzles.
+                </div>)
+            }
+
+            if (answer === wordList[3].toLowerCase()) {
+              return (<div style={{ whiteSpace: "pre-wrap" }}>
+                '{wordList[3]}' is Correct!. <br></br>
+              </div>)
+            }
+            else {
+              return ((<div style={{ whiteSpace: "pre-wrap" }}>
+                '{wordList[3]}' is Incorrect {':('}. <br></br>
+                Try 'puzzle hint' for a list of hints if your are stuck.
+              </div>))
+            }
+          }
+
+        }
+
+        else {
+
+          return (<div style={{ whiteSpace: "pre-wrap" }}>
+            Invalid Command. <br></br>
+            Try 'puzzle'
+          </div>)
+
+        }
       }
 
       else {
@@ -191,6 +293,29 @@ Type 'exit', or press Ctrl + D (or ⌘ + D on Mac) to shut down.`
             Usage: theme {"<color_name>"} <br></br>
             Example: theme synthwave
           </div>
+
+        case 'puzzle':
+          return (
+            <div style={{ whiteSpace: "pre-wrap" }}>
+              Available Puzzles:<br></br>
+              <ul>
+                <li>{puzzleAName}</li>
+                <li>{puzzleBName}</li>
+                <li>{puzzleCName}</li>
+              </ul>
+              <br></br>
+
+              Usage:<br></br>
+              puzzle attempt {"<puzzle_name> <your_answer>"}<br></br>
+              puzzle display {"<puzzle_name>"}
+
+              <br></br>
+              <br></br>
+              Examples: <br></br>
+              puzzle display {puzzleAName} <br></br>
+              puzzle display {puzzleAName} myAnswer
+            </div>
+          )
 
 
         case 'exit':
@@ -316,7 +441,7 @@ Type 'exit', or press Ctrl + D (or ⌘ + D on Mac) to shut down.`
       ]);
 
       //Wipe out previous history
-      setHistory({ type: 'command', content: "" });
+      setHistory([{ type: 'command', content: "" }]);
 
       if (inputRef.current) inputRef.current.focus();
 
