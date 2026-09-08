@@ -1,7 +1,7 @@
 import './ComputerScreen.css'
 import { useState, useRef, useEffect, useEffectEvent } from 'react'
 
-function ComputerScreen({ audio, screenControl, helpRequest }) {
+function ComputerScreen({ audio, screenControl, helpRequest, setHelpRequest }) {
 
   //Allows access to the input element
   const inputRef = useRef(null);
@@ -303,20 +303,29 @@ Type 'exit', or press Ctrl + D (or ⌘ + D on Mac) to shut down.`
 
   //Function for help button in main screen
   const showHelp = useEffectEvent(() => {
-    const showHelp = () => {
+    const helpFunction = () => {
       const helpInput = "help";
       const newCommand = { type: 'command', content: helpInput };
       const output = processCommand(helpInput);
       const newOutput = { type: 'output', content: output };
 
-      setDisplayLines(prev => [...prev, newCommand, newOutput]);
-      setHistory(prev => [...prev, newCommand]);
+      //MOTD starter text
+      setDisplayLines([{ type: 'output', content: <span style={{ whiteSpace: "pre-wrap" }}>{starterText}</span> },
+        newCommand,
+        newOutput
+      ]);
+
+      //Wipe out previous history
+      setHistory({ type: 'command', content: "" });
 
       if (inputRef.current) inputRef.current.focus();
+
+      //Reset trigger to avoid delays
+      setHelpRequest(0);
     };
 
-    showHelp();
-  });
+    helpFunction();
+  }, [helpRequest, setHelpRequest]);
 
   useEffect(() => {
     if (helpRequest > 0) showHelp();

@@ -18,6 +18,10 @@ function App() {
   useEffect(() => { Howler.mute(isMuted) }, [isMuted])
 
   function handleHelpRequest() {
+    if (screen === "off") {
+      audio.playPowerOn();
+    }
+
     screenControl("on")
     setHelpRequest(request => request + 1)
   }
@@ -31,6 +35,8 @@ function App() {
         <ComputerScreen
           audio={audio}
           screenControl={screenControl}
+          helpRequest={helpRequest}
+          setHelpRequest={setHelpRequest}
         />
       )}
 
