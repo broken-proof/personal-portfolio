@@ -1,3 +1,34 @@
+.startscreen {
+  height: 100vh;
+  width: 100vw;
+  background-color: #23001b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 6767676767;
+}
+
+.startbutton {
+  background: none;
+  border: none;
+  animation: pulse 2s infinite;
+  cursor: pointer;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
 .settings_icons {
   display: flex;
   gap: 2px;

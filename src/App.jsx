@@ -5,12 +5,15 @@ import { useAudioManager } from "./Sounds"
 import './App.css'
 import { Howler } from 'howler'
 import ToolBar from "./ToolBar"
+import startbut from "./assets/startbutton.png"
 
 function App() {
   const [screen, screenControl] = useState("off")
   const [helpRequest, setHelpRequest] = useState(0)
   const audio = useAudioManager()
   audio.playEmpty()
+
+  const [started, setStarted] = useState(false);
 
   //Mute Button
   const [isMuted, setIsMuted] = useState(false);
@@ -28,7 +31,23 @@ function App() {
 
   return (
     <>
-      <ToolBar isMuted={isMuted} setIsMuted={setIsMuted} onHelp={handleHelpRequest}></ToolBar>
+      {/* Starter Screen */}
+      {!started && (
+        <div className="startscreen">
+          <button className="startbutton"
+            onClick={() => {
+              setStarted(true)
+              audio.playEmpty();
+              audio.startNoise();
+            }}
+          >
+            <img src={startbut} alt="volume off" className="start_icon" />
+          </button>
+        </div>
+      )}
+
+      {/* Make toolbar only if started */}
+      {started && <ToolBar isMuted={isMuted} setIsMuted={setIsMuted} onHelp={handleHelpRequest}></ToolBar>}
 
       <SpaceBackground audio={audio} screen={screen} screenControl={screenControl} />
       {screen === "on" && (
@@ -40,8 +59,10 @@ function App() {
         />
       )}
 
-      <div style={{ position: "absolute", bottom: "8px", left: "10px", fontSize: "12px", color: "white", zIndex: 8 }}>
-        CREDIT: "Retro computer" <a href='https://skfb.ly/ou69O'>https://skfb.ly/ou69O</a> by Urpo is licensed under Creative Commons Attribution <a href='http://creativecommons.org/licenses/by/4.0/'>(http://creativecommons.org/licenses/by/4.0/)</a>
+      <div style={{ whiteSpace: "pre-wrap", position: "absolute", bottom: "8px", left: "10px", fontSize: "12px", color: "white", zIndex: 8 }}>
+        CREDITS: {"Model>"} "Retro computer" <a href='https://skfb.ly/ou69O'>https://skfb.ly/ou69O</a> by Urpo is licensed under Creative Commons Attribution <a href='http://creativecommons.org/licenses/by/4.0/'>(http://creativecommons.org/licenses/by/4.0/)</a>  ,
+        {"   SFX>"} <a href='https://pixabay.com/'>(https://pixabay.com/)</a>
+
       </div>"
     </>
   )
