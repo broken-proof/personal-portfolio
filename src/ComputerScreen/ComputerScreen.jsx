@@ -8,22 +8,52 @@ function ComputerScreen({ audio, screenControl, helpRequest, setHelpRequest }) {
 
 
   //Puzzle Strings
-  const puzzleAName = "aname";
-  const puzzleBName = "bname";
-  const puzzleCName = "cname";
+  const puzzleAName = "Dogarithms";
+  const puzzleBName = "Pawdio";
+  const puzzleCName = "Underdog";
 
-  const puzzleAAnswer = "aanswer"
-  const puzzleBAnswer = "banswer"
-  const puzzleCAnswer = "canswer"
+  const puzzleAAnswer = "Frisco"
+  const puzzleBAnswer = "Toby"
+  const puzzleCAnswer = "Chase"
 
-  const puzzleA = "a";
-  const puzzleB = "b";
-  const puzzleC = "c";
+  const puzzleA = `
+If a dog
+
+  chases one fox,
+  lets out three barks,
+  has three friends,
+  owns four mansions,
+  performs five magic tricks,
+  and has two toys,
+
+then what is the dog's name?
+  `;
+  const puzzleB = `
+If a dog
+
+  finds the golf tee in the yard,
+  sweetly says "oh" when pet,
+  chases away every bee near the tree,
+  and always tilts its head and wonders why at bath time,
+
+then what is the dog's name?
+  `;
+  const puzzleC = `
+If a dog
+
+  chases whatever says 'meow',
+  always wears a device to listen to music, 
+  steals the red fruit that keeps the doctor away,
+  howls at the five-pointed light at night,
+  and guards the nest until something hatches,
+
+then what is the dog's name?
+  `;
 
   const puzzleHints = `
-  akfafd
-  adfjkad
-  adf;a
+Dogarithm> The number tells you which letter to pluck.
+Pawdio> Forget spelling, this one's about how the words sound out loud.
+Underdog> List out the things being described.
   `
 
   //Allows access to terminal div element
@@ -146,15 +176,19 @@ Type 'exit', or press Ctrl + D (or ⌘ + D on Mac) to shut down.`
           }
           else {
             switch (wordList[2].toLowerCase()) {
-              case (puzzleAName):
+              case (puzzleAName.toLowerCase()):
                 return (<div style={{ whiteSpace: "pre-wrap" }}>
                   {puzzleA} <br></br>
                   {`To Attempt the Puzzle, try 'puzzle attempt ${puzzleAName} <your_answer>'`}
                 </div>)
-              case (puzzleBName):
-                return (<div style={{ whiteSpace: "pre-wrap" }}>{puzzleB}</div>)
-              case (puzzleCName):
-                return (<div style={{ whiteSpace: "pre-wrap" }}>{puzzleC}</div>)
+              case (puzzleBName.toLowerCase()):
+                return (<div style={{ whiteSpace: "pre-wrap" }}>{puzzleB} <br></br>
+                  {`To Attempt the Puzzle, try 'puzzle attempt ${puzzleBName} <your_answer>'`}
+                </div>)
+              case (puzzleCName.toLowerCase()):
+                return (<div style={{ whiteSpace: "pre-wrap" }}>{puzzleC} <br></br>
+                  {`To Attempt the Puzzle, try 'puzzle attempt ${puzzleCName} <your_answer>'`}
+                </div>)
               default:
                 return (<div style={{ whiteSpace: "pre-wrap" }}>
                   '{wordList[2]}' is not an available puzzle. <br></br>
@@ -172,7 +206,7 @@ Type 'exit', or press Ctrl + D (or ⌘ + D on Mac) to shut down.`
 
         else if (wordList[1] === "attempt") {
 
-          if (wordList.length != 3) {
+          if (wordList.length != 4) {
             return (<div style={{ whiteSpace: "pre-wrap" }}>
               Invalid Command. <br></br>
               Try 'puzzle attempt {"<puzzle_name> <your_answer>"} ' or 'puzzle' for a list of available puzzles.
@@ -182,9 +216,9 @@ Type 'exit', or press Ctrl + D (or ⌘ + D on Mac) to shut down.`
           else {
             let answer;
             switch (wordList[2]) {
-              case (puzzleAName): answer = puzzleAAnswer; break;
-              case (puzzleBName): answer = puzzleBAnswer; break;
-              case (puzzleCName): answer = puzzleCAnswer; break;
+              case (puzzleAName.toLowerCase()): answer = puzzleAAnswer.toLowerCase(); break;
+              case (puzzleBName.toLowerCase()): answer = puzzleBAnswer.toLowerCase(); break;
+              case (puzzleCName.toLowerCase()): answer = puzzleCAnswer.toLowerCase(); break;
               default:
                 return (<div style={{ whiteSpace: "pre-wrap" }}>
                   '{wordList[2]}' is not an available puzzle. <br></br>
@@ -313,7 +347,7 @@ Type 'exit', or press Ctrl + D (or ⌘ + D on Mac) to shut down.`
               <br></br>
               Examples: <br></br>
               puzzle display {puzzleAName} <br></br>
-              puzzle display {puzzleAName} myAnswer
+              puzzle attempt {puzzleAName} myAnswer
             </div>
           )
 
