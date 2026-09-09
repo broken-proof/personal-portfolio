@@ -40,6 +40,10 @@
 }
 
 .monitor {
+  width: auto;
+  height: 92vh;
+  aspect-ratio: 1.25/1;
+
   animation: fade 2s ease-in-out forwards;
 
   position: absolute;
@@ -54,8 +58,6 @@
   justify-content: center;
   align-items: center;
 
-  width: 58vw;
-  height: 92vh;
   border-radius: var(--rounding);
 
   background: rgb(21, 21, 21);
@@ -232,7 +234,7 @@
   text-shadow: 0 0 5px var(--shadow-color), 0 0 10px var(--shadow-color);
 
   transition: all 0.2s ease;
-  font-size: 0.8rem;
+  font-size: clamp(0.7rem, 0.4rem + 0.5vw, 1.2rem);
   font-weight: 550;
 
   -webkit-font-smoothing: none;
