@@ -11,6 +11,7 @@ function StarField() {
   const distance = 50;
   const acceleration = 0.4;
 
+  //UseMemo to make calculations of random star positions faster
   const positions = useMemo(() => {
     const positions = new Float32Array(count * 3);
     for (let i = 0; i < count * 3; i += 3) {
@@ -22,6 +23,7 @@ function StarField() {
     return positions;
   }, [])
 
+  //UseFrame for each new render frame
   useFrame((state) => {
     if (!pointsRef.current) return;
 
@@ -70,13 +72,16 @@ const targetVec = new THREE.Vector3();
 const computerPos = new THREE.Vector3(0, -3, 38);
 
 function CameraRig({ screen, controlsRef }) {
+
   useFrame((state) => {
     if (!controlsRef.current) return;
 
+    //If user enters screen
     if (screen === "on") {
-      // Instantly disable controls when zooming in
+      // Disables controls for 3D model when zooming in.
       if (controlsRef.current) controlsRef.current.enabled = false;
 
+      //Specific movement to make camera right on top of screen
       targetVec.set(0, -2, 42.5);
       state.camera.position.lerp(targetVec, 0.05);
       state.camera.lookAt(0, -2, 38);
@@ -85,13 +90,12 @@ function CameraRig({ screen, controlsRef }) {
       targetVec.set(0, 0, 50);
       const distance = state.camera.position.distanceTo(targetVec);
 
-      // ONLY override the camera while traveling
+      // Override the camera when travelling to monitor screen
       if (distance > 0.5) {
         state.camera.position.lerp(targetVec, 0.05);
         state.camera.lookAt(computerPos);
       } else {
-        // Once arrived, hand FULL control back to OrbitControls
-        // and stop injecting manual lookAt commands
+        // Once the movement is complete, return control back to Orbit Controls
         controlsRef.current.enabled = true;
       }
     }
@@ -100,12 +104,15 @@ function CameraRig({ screen, controlsRef }) {
   return null;
 }
 
-
+//Final export of all the components
 function SpaceBackground({ audio, screen, screenControl }) {
   const cameraControls = useRef();
 
   return (
+
     <div className="background_div">
+
+      {/* Canvas for Orbit Controls + Meshes */}
       <Canvas camera={{ position: [0, 0, 50], fov: 60 }}>
         <CameraRig controlsRef={cameraControls} screen={screen}></CameraRig>
         <OrbitControls
@@ -120,12 +127,19 @@ function SpaceBackground({ audio, screen, screenControl }) {
         </OrbitControls>
 
         <color attach="background" args={['#10091b']}></color>
+
+        {/* Fog to prevent farther stars from being visible */}
         <fogExp2 attach="fog" args={['#0d1033', 0.02]}></fogExp2>
+
+        {/* Stars */}
         <StarField />
+
+        {/* Lights to make the Computer Monitor Visible */}
         <ambientLight intensity={1.5}></ambientLight>
         <directionalLight position={[10, 10, 10]} intensity={2} />
         <Environment preset="night"></Environment>
 
+        {/* Computer Mesh */}
         <Retro
           position={[0, -3, 38]}
           scale={5}
