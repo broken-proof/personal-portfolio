@@ -13,8 +13,7 @@ import * as THREE from 'three'
 import { useAudioManager } from '../Sounds'
 
 export default function Retro({ screenControl, audio, ...props }) {
-  const { nodes, materials } = useGLTF('/computer.glb')
-  const { playPowerOn, computerBoot } = useAudioManager();
+  const { nodes, materials } = useGLTF('./computer.glb')
 
   useEffect(() => {
     Object.values(materials).forEach((material) => {
@@ -52,4 +51,4 @@ export default function Retro({ screenControl, audio, ...props }) {
   )
 }
 
-useGLTF.preload('/computer.glb')
+useGLTF.preload('./computer.glb')
