@@ -20,7 +20,7 @@ export function useAudioManager() {
   const [playKeyC] = useSound(keyC, { volume: 0.7 })
   const [startNoise] = useSound(startbru, { volume: 1 })
 
-  //Return object with all the sounds
+  //Return object with all da sounds
   return {
     playPowerOn,
     playPowerOff,
