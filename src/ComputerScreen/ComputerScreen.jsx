@@ -103,6 +103,79 @@ Type 'exit', or press Ctrl + D (or ⌘ + D on Mac) to shut down.`
   //Variable for screen color theme
   const [theme, setTheme] = useState("amber")
 
+  //Matrix rain animation state
+  const [rainActive, setRainActive] = useState(false)
+  const [rainColumns, setRainColumns] = useState([])
+  const rainTimeoutRef = useRef(null)
+
+  function generateMatrixRainFrame() {
+    const columns = 35;
+    const rows = 36;
+    const characters = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    return Array.from({ length: columns }, (_, columnIndex) => {
+      const visibleRows = 10 + Math.floor(Math.random() * (rows - 10));
+      const column = Array.from({ length: rows }, (_, rowIndex) => {
+        if (rowIndex > visibleRows && Math.random() > 0.3) {
+          return ' ';
+        }
+
+        return characters[Math.floor(Math.random() * characters.length)];
+      });
+
+      return { id: `${columnIndex}-${Math.random()}`, chars: column };
+    });
+  }
+
+  function startRainSequence(previousDisplayLines, previousHistory) {
+    if (rainTimeoutRef.current) {
+      clearTimeout(rainTimeoutRef.current);
+    }
+
+    setRainActive(true);
+    setDisplayLines([]);
+    setHistory([{ type: 'command', content: "" }]);
+    setInput('');
+    setCommandIndex(0);
+
+    rainTimeoutRef.current = setTimeout(() => {
+      setRainActive(false);
+      setDisplayLines(previousDisplayLines);
+      setHistory(previousHistory);
+
+      requestAnimationFrame(() => {
+        terminalRef.current?.scrollTo({
+          top: terminalRef.current.scrollHeight,
+          behavior: 'smooth'
+        });
+      });
+
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, 5000);
+  }
+
+  useEffect(() => {
+    if (!rainActive) return;
+
+    setRainColumns(generateMatrixRainFrame());
+
+    const intervalId = setInterval(() => {
+      setRainColumns(generateMatrixRainFrame());
+    }, 110);
+
+    return () => clearInterval(intervalId);
+  }, [rainActive]);
+
+  useEffect(() => {
+    return () => {
+      if (rainTimeoutRef.current) {
+        clearTimeout(rainTimeoutRef.current);
+      }
+    };
+  }, []);
+
   //Function to process commands and  return string
   function processCommand(input) {
 
@@ -269,6 +342,7 @@ Type 'exit', or press Ctrl + D (or ⌘ + D on Mac) to shut down.`
             resume    -Download my resume<br></br>
             theme     -Modify Terminal Color Theme <br></br>
             projects  -View some cool creations <br></br>
+            rain      -A message from the matrix<br></br>
             puzzle    -Challenge yourself<br></br>
             clear     -Clear Screen <br></br>
             exit      -Shut Down
@@ -326,6 +400,12 @@ Type 'exit', or press Ctrl + D (or ⌘ + D on Mac) to shut down.`
             <br></br>
             Usage: theme {"<color_name>"} <br></br>
             Example: theme synthwave
+          </div>
+
+        case 'rain':
+          return <div style={{ whiteSpace: "pre-wrap" }}>
+            {"[ ~ ]"} Signal detected in the static... <br></br>
+            Something in the machine is awake.
           </div>
 
         case 'puzzle':
@@ -386,8 +466,20 @@ Type 'exit', or press Ctrl + D (or ⌘ + D on Mac) to shut down.`
 
 
     if (element.key === "Enter") {
-      console.log(history);
       const fixedInput = input.trim().toLowerCase();
+
+      if (fixedInput === 'rain') {
+        const nextDisplay = [...displayLines, { type: 'command', content: fixedInput }];
+        const nextHistory = [...history, { type: 'command', content: fixedInput }];
+
+        setDisplayLines(nextDisplay);
+        setHistory(nextHistory);
+        setInput('');
+        setCommandIndex(0);
+
+        startRainSequence(nextDisplay, nextHistory);
+        return;
+      }
 
       if (fixedInput === 'clear') {
         newDisplay = [{ type: 'output', content: "Welcome to shivam_os v1.0.\n Type 'help' to see available commands. \n Type 'exit', or press Ctrl + D (or ⌘ + D on Mac) to shut down." }]
@@ -537,29 +629,42 @@ Type 'exit', or press Ctrl + D (or ⌘ + D on Mac) to shut down.`
 
           <div onKeyDown={handleTerminalPresses} ref={terminalRef} className="terminal" onClick={focusOnInput}>
 
-            {/* Render all lines within the history */}
-            {
-              displayLines.map((line, index) => (
-                <div key={index} >
-                  {
-                    line.type === 'command' ? (
-                      // Output with prefix if it is a command
-                      <span className='output_line'><span className='output_line'>guest@shivam-os:$ </span>{line.content} </span>
-                    ) : (
-                      // Output standard content if not a command
-                      <span> {line.content}</span>
-                    )
-                  }
+            {rainActive ? (
+              <div className="matrix-rain" aria-label="matrix rain animation">
+                {rainColumns.map((column, columnIndex) => (
+                  <div key={column.id} className="matrix-column">
+                    {column.chars.map((char, rowIndex) => (
+                      <span
+                        key={`${column.id}-${rowIndex}`}
+                        className={rowIndex === 0 ? 'matrix-char matrix-head' : 'matrix-char'}
+                      >
+                        {char === ' ' ? '\u00A0' : char}
+                      </span>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <>
+                {displayLines.map((line, index) => (
+                  <div key={index} >
+                    {
+                      line.type === 'command' ? (
+                        <span className='output_line'><span className='output_line'>guest@shivam-os:$ </span>{line.content} </span>
+                      ) : (
+                        <span> {line.content}</span>
+                      )
+                    }
+                  </div>
+
+                ))}
+
+                <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
+                  <span className='output_line'>guest@shivam-os:$ </span>
+                  <input ref={inputRef} onKeyDown={handleInput} className="current_input" type="text" value={input} autoFocus spellCheck="false" autoComplete="off" onChange={(element) => setInput(element.target.value)}></input>
                 </div>
-
-              ))
-            }
-
-            {/* Render Active Input  */}
-            <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
-              <span className='output_line'>guest@shivam-os:$ </span>
-              <input ref={inputRef} onKeyDown={handleInput} className="current_input" type="text" value={input} autoFocus spellCheck="false" autoComplete="off" onChange={(element) => setInput(element.target.value)}></input>
-            </div>
+              </>
+            )}
           </div>
 
         </div>
