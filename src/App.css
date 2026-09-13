@@ -15,6 +15,54 @@
   cursor: pointer;
 }
 
+.static_view_overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: rgba(5, 4, 15, 0.42);
+  animation: staticOverlayFadeIn 280ms ease-out;
+}
+
+@keyframes staticOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.console_credits {
+  position: absolute;
+  right: 18px;
+  bottom: 12px;
+  left: 18px;
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px 10px;
+  color: rgba(237, 234, 255, 0.58);
+  font-family: 'Courier New', monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.04em;
+  line-height: 1.5;
+  pointer-events: none;
+  text-align: center;
+}
+
+.console_credits a {
+  color: rgba(170, 157, 255, 0.82);
+  pointer-events: auto;
+}
+
+.console_credits a:hover {
+  color: #edeaff;
+}
+
 @keyframes pulse {
   0% {
     opacity: 1;
@@ -30,45 +78,127 @@
 }
 
 .settings_icons {
+  --toolbar-ink: #edeaff;
+  --toolbar-muted: #aaa5c7;
+  --toolbar-dim: #777293;
+  --toolbar-purple: #9b8cff;
+  --toolbar-line: rgba(151, 139, 218, 0.24);
+  --toolbar-line-bright: rgba(170, 157, 255, 0.52);
   display: flex;
-  gap: 2px;
-  padding: 4px;
-  background-color: #c0c0c0;
-  border-top: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
-  border-bottom: 2px solid #000000;
-  border-right: 2px solid #000000;
-  border-radius: 0;
-  position: absolute;
-  top: 20px;
-  left: 20px;
+  gap: 6px;
+  padding: 12px 10px 10px;
+  background: rgba(12, 11, 27, 0.86);
+  border: 1px solid var(--toolbar-line);
+  box-shadow: 0 8px 24px rgba(4, 3, 15, 0.24), 0 0 20px rgba(112, 96, 194, 0.08);
+  backdrop-filter: blur(10px);
+  position: fixed;
+  top: 82px;
+  left: 18px;
   z-index: 100;
   flex-direction: column;
 }
 
+.toolbar_header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 4px 5px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid var(--toolbar-line);
+  color: var(--toolbar-purple);
+  font-family: 'Courier New', monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+.toolbar_indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #b7adff;
+  box-shadow: 0 0 8px rgba(183, 173, 255, 0.7);
+}
+
 .toolbar_button {
-  background-color: #c0c0c0;
-  border-top: 2px solid #ffffff;
-  border-left: 2px solid #ffffff;
-  border-bottom: 2px solid #000000;
-  border-right: 2px solid #000000;
-  padding: 8px;
+  min-height: 48px;
+  padding: 8px 9px;
+  border: 1px solid transparent;
+  background: rgba(30, 26, 58, 0.42);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   outline: none;
+  color: var(--toolbar-muted);
+  font-family: 'Courier New', monospace;
+  font-weight: 700;
+  font-size: 0.68rem;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
 }
 
-.toolbar_button:active {
-  border-top: 4px solid #000000;
-  border-left: 4px solid #000000;
-  border-bottom: 4px solid #ffffff;
-  border-right: 4px solid #ffffff;
-  padding: 9px 7px 7px 9px;
+.toolbar_button:hover,
+.toolbar_button:focus-visible {
+  border-color: var(--toolbar-line-bright);
+  background: rgba(124, 108, 219, 0.14);
+  color: var(--toolbar-ink);
+}
+
+.toolbar_button.active {
+  border-color: var(--toolbar-purple);
+  background: rgba(124, 108, 219, 0.22);
+  color: var(--toolbar-ink);
+}
+
+.mode_button {
+  min-width: 148px;
+  white-space: nowrap;
+  text-align: center;
 }
 
 .pixel_icon {
   width: 32px;
   height: 32px;
+}
+
+@media (max-width: 760px) {
+  .settings_icons {
+    top: auto;
+    right: 12px;
+    bottom: 12px;
+    left: 12px;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+    gap: 5px;
+    padding: 7px;
+  }
+
+  .toolbar_header {
+    display: none;
+  }
+
+  .toolbar_button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .mode_button {
+    min-width: 0;
+    flex: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toolbar_button {
+    transition: none;
+  }
+
+  .static_view_overlay {
+    animation: none;
+  }
 }

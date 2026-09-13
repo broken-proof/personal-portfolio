@@ -71,10 +71,12 @@ function StarField() {
 const targetVec = new THREE.Vector3();
 const computerPos = new THREE.Vector3(0, -3, 38);
 
-function CameraRig({ screen, controlsRef }) {
+function CameraRig({ screen, controlsRef, viewMode }) {
 
   useFrame((state) => {
     if (!controlsRef.current) return;
+
+    const isStaticMode = viewMode === 'static';
 
     //If user enters screen
     if (screen === "on") {
@@ -83,8 +85,14 @@ function CameraRig({ screen, controlsRef }) {
 
       //Specific movement to make camera right on top of screen
       targetVec.set(0, -2, 42.5);
-      state.camera.position.lerp(targetVec, 0.05);
+      state.camera.position.lerp(targetVec, 0.028);
       state.camera.lookAt(0, -2, 38);
+    }
+    else if (isStaticMode) {
+      targetVec.set(0, 0, 52);
+      state.camera.position.lerp(targetVec, 0.02);
+      state.camera.lookAt(0, -1, 38);
+      controlsRef.current.enabled = false;
     }
     else {
       targetVec.set(0, 0, 50);
@@ -92,7 +100,7 @@ function CameraRig({ screen, controlsRef }) {
 
       // Override the camera when travelling to monitor screen
       if (distance > 0.5) {
-        state.camera.position.lerp(targetVec, 0.05);
+        state.camera.position.lerp(targetVec, 0.028);
         state.camera.lookAt(computerPos);
       } else {
         // Once the movement is complete, return control back to Orbit Controls
@@ -105,7 +113,7 @@ function CameraRig({ screen, controlsRef }) {
 }
 
 //Final export of all the components
-function SpaceBackground({ audio, screen, screenControl }) {
+function SpaceBackground({ audio, screen, screenControl, viewMode = 'console' }) {
   const cameraControls = useRef();
 
   return (
@@ -114,12 +122,12 @@ function SpaceBackground({ audio, screen, screenControl }) {
 
       {/* Canvas for Orbit Controls + Meshes */}
       <Canvas camera={{ position: [0, 0, 50], fov: 60 }}>
-        <CameraRig controlsRef={cameraControls} screen={screen}></CameraRig>
+        <CameraRig controlsRef={cameraControls} screen={screen} viewMode={viewMode}></CameraRig>
         <OrbitControls
           ref={cameraControls}
           target={[0, -3, 38]}
           enablePan={false}
-          enabled={screen === "off"}
+          enabled={screen === "off" && viewMode === "console"}
           minDistance={10}
           maxDistance={70}
         >
@@ -141,8 +149,8 @@ function SpaceBackground({ audio, screen, screenControl }) {
 
         {/* Computer Mesh */}
         <Retro
-          position={[0, -3, 38]}
-          scale={5}
+          position={viewMode === 'static' ? [0, -0.5, 38] : [0, -3, 38]}
+          scale={viewMode === 'static' ? 1.3 : 5}
           screenControl={screenControl}
           rotation={[0, Math.PI * 1.5, 0]}
           audio={audio}

@@ -1,5 +1,6 @@
 import SpaceBackground from "./background/SpaceBackground"
 import ComputerScreen from "./ComputerScreen/ComputerScreen"
+import StaticPortfolio from "./StaticPortfolio/StaticPortfolio"
 import { useEffect, useState } from 'react'
 import { useAudioManager } from "./Sounds"
 import './App.css'
@@ -13,6 +14,9 @@ function App() {
 
   //Variable for rendering screen when help button is pressed
   const [helpRequest, setHelpRequest] = useState(0)
+
+  //Display mode for the overall experience
+  const [viewMode, setViewMode] = useState("console")
 
   //Object for all Audio Controls
   const audio = useAudioManager()
@@ -39,6 +43,16 @@ function App() {
     setHelpRequest(request => request + 1)
   }
 
+  function handleViewModeChange(nextMode) {
+    if (nextMode === viewMode) return;
+
+    setViewMode(nextMode);
+
+    if (nextMode === "static" && screen === "on") {
+      screenControl("off");
+    }
+  }
+
   return (
     <>
       {/* Starter Screen */}
@@ -57,9 +71,27 @@ function App() {
       )}
 
       {/* Make toolbar only if started */}
-      {started && <ToolBar isMuted={isMuted} setIsMuted={setIsMuted} onHelp={handleHelpRequest}></ToolBar>}
+      {started && (
+        <ToolBar
+          isMuted={isMuted}
+          setIsMuted={setIsMuted}
+          onHelp={handleHelpRequest}
+          viewMode={viewMode}
+          setViewMode={handleViewModeChange}
+        />
+      )}
 
-      <SpaceBackground audio={audio} screen={screen} screenControl={screenControl} />
+      <SpaceBackground
+        audio={audio}
+        screen={screen}
+        screenControl={screenControl}
+        viewMode={viewMode}
+      />
+
+      {started && viewMode === "static" && (
+        <div className="static_view_overlay" aria-hidden="true" />
+      )}
+
       {screen === "on" && (
         <ComputerScreen
           audio={audio}
@@ -69,12 +101,17 @@ function App() {
         />
       )}
 
-      {/* Credits for 3D model and SFX */}
-      <div style={{ whiteSpace: "pre-wrap", position: "absolute", bottom: "8px", left: "10px", fontSize: "12px", color: "white", zIndex: 8 }}>
-        CREDITS: {"Model>"} "Retro computer" <a href='https://skfb.ly/ou69O'>https://skfb.ly/ou69O</a> by Urpo is licensed under Creative Commons Attribution <a href='http://creativecommons.org/licenses/by/4.0/'>(http://creativecommons.org/licenses/by/4.0/)</a>  ,
-        {"   SFX>"} <a href='https://pixabay.com/'>(https://pixabay.com/)</a>
+      {started && viewMode === "console" && (
+        <div className="console_credits">
+          <span>MODEL // “Retro computer” by Urpo</span>
+          <a href="https://skfb.ly/ou69O" target="_blank" rel="noreferrer">Sketchfab</a>
+          <a href="http://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a>
+          <span>SFX // </span>
+          <a href="https://pixabay.com/" target="_blank" rel="noreferrer">Pixabay</a>
+        </div>
+      )}
 
-      </div>"
+      {started && viewMode === "static" && <StaticPortfolio />}
     </>
   )
 }

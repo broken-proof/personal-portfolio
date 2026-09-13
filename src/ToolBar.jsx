@@ -5,7 +5,7 @@ import fullscreenoff from './assets/icons/fullscreenoff.png'
 import questionmark from './assets/icons/helpmark.png'
 import { useState } from 'react'
 
-function ToolBar({ setIsMuted, isMuted, onHelp }) {
+function ToolBar({ setIsMuted, isMuted, onHelp, viewMode, setViewMode }) {
 
   //Boolean state to detect when screen is fullscreen
   const [fullscreen, setFullScreen] = useState(false);
@@ -25,10 +25,15 @@ function ToolBar({ setIsMuted, isMuted, onHelp }) {
     }
   };
 
-  return (<div className="settings_icons">
+  return (<aside className="settings_icons" aria-label="System controls">
+    <div className="toolbar_header">
+      <span className="toolbar_indicator" aria-hidden="true" />
+      <span>SYS // CTRL</span>
+    </div>
 
     {/* Mute/UnMute button */}
     <button className="toolbar_button"
+      aria-label={isMuted ? 'Turn sound on' : 'Mute sound'}
       onClick={() => { setIsMuted(!isMuted) }}>
       {/* Conditional Rendering based on isMuted State */}
       {isMuted ?
@@ -38,6 +43,7 @@ function ToolBar({ setIsMuted, isMuted, onHelp }) {
 
     {/* Fullscreen button */}
     <button className="toolbar_button"
+      aria-label={fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
       onClick={() => { toggleFullscreen() }}>
       {/* Conditional maximize/minimize icons based on fullscreen state */}
       {fullscreen ?
@@ -46,12 +52,28 @@ function ToolBar({ setIsMuted, isMuted, onHelp }) {
       }
     </button>
 
+    <button
+      className={`toolbar_button mode_button ${viewMode === 'console' ? 'active' : ''}`}
+      aria-pressed={viewMode === 'console'}
+      onClick={() => setViewMode('console')}
+    >
+      <span>Console View</span>
+    </button>
+
+    <button
+      className={`toolbar_button mode_button ${viewMode === 'static' ? 'active' : ''}`}
+      aria-pressed={viewMode === 'static'}
+      onClick={() => setViewMode('static')}
+    >
+      <span>Static View</span>
+    </button>
+
     {/* Help button always stays */}
-    <button className="toolbar_button" onClick={onHelp}>
+    <button className="toolbar_button" aria-label="Open help" onClick={onHelp}>
       <img src={questionmark} alt="help" className="pixel_icon" />
     </button>
 
-  </div>)
+  </aside>)
 }
 
 export default ToolBar;
