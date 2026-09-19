@@ -1,0 +1,36 @@
+/* Single source of truth for the static view's pixel theme.
+   Components and layout CSS read these tokens; never hard-code colors or fonts elsewhere. */
+:root {
+  --px: 4px;
+
+  --px-ink: #f2efff;
+  --px-muted: #c3bee6;
+  --px-dim: #8a84b8;
+  --px-accent: #5ab8ff;
+  --px-accent-2: #ff6fb5;
+  --px-yellow: #ffd75e;
+  --px-line: #5a4bb0;
+  --px-shadow: #07041a;
+  --px-surface: rgba(14, 10, 36, 0.78);
+  --px-surface-solid: rgba(10, 7, 30, 0.92);
+  --px-on-accent: #0a0620;
+
+  --font-pixel-head: "Press Start 2P", "Courier New", monospace;
+  --font-pixel-body: "VT323", "Courier New", monospace;
+
+  /* Stepped-corner pixel border: four offset shadows leave the corners notched, no clip-path needed. */
+  --px-frame:
+    0 calc(var(--px) * -1) 0 0 var(--px-line),
+    0 var(--px) 0 0 var(--px-line),
+    calc(var(--px) * -1) 0 0 0 var(--px-line),
+    var(--px) 0 0 0 var(--px-line);
+  --px-frame-accent:
+    0 calc(var(--px) * -1) 0 0 var(--px-accent),
+    0 var(--px) 0 0 var(--px-accent),
+    calc(var(--px) * -1) 0 0 0 var(--px-accent),
+    var(--px) 0 0 0 var(--px-accent);
+  --px-drop:
+    var(--px) calc(var(--px) * 2) 0 0 var(--px-shadow),
+    calc(var(--px) * 2) var(--px) 0 0 var(--px-shadow),
+    calc(var(--px) * 2) calc(var(--px) * 2) 0 0 var(--px-shadow);
+}

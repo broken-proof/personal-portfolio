@@ -6,6 +6,7 @@ import { useAudioManager } from "./Sounds"
 import './App.css'
 import { Howler } from 'howler'
 import ToolBar from "./ToolBar"
+import HelpPopup from "./StaticPortfolio/components/HelpPopup"
 import startbut from "./assets/icons/startbutton.png"
 
 function App() {
@@ -15,11 +16,17 @@ function App() {
   //Variable for rendering screen when help button is pressed
   const [helpRequest, setHelpRequest] = useState(0)
 
+  //Whether the static view's help popup is showing
+  const [staticHelpOpen, setStaticHelpOpen] = useState(false)
+
   //Display mode for the overall experience
   const [viewMode, setViewMode] = useState("console")
 
+  //Terminal-only sound effects (power, boot, keys) play in console view and are off in static view
+  const [terminalSfxOn, setTerminalSfxOn] = useState(true)
+
   //Object for all Audio Controls
-  const audio = useAudioManager()
+  const audio = useAudioManager(terminalSfxOn)
 
   //Start browser audio right away if allowed, otherwise it'll turn on after start button
   audio.playEmpty()
@@ -35,6 +42,12 @@ function App() {
 
   //Function for Help Button
   function handleHelpRequest() {
+    //In static view there is no terminal, so help opens the navigation popup instead
+    if (viewMode === "static") {
+      setStaticHelpOpen(open => !open)
+      return;
+    }
+
     if (screen === "off") {
       audio.playPowerOn();
     }
@@ -46,11 +59,16 @@ function App() {
   function handleViewModeChange(nextMode) {
     if (nextMode === viewMode) return;
 
-    setViewMode(nextMode);
-
+    //Power off sound must play before terminal sounds are switched off below
     if (nextMode === "static" && screen === "on") {
+      if (audio.bootControls.sound) audio.bootControls.stop();
+      audio.playPowerOff();
       screenControl("off");
     }
+
+    setViewMode(nextMode);
+    setTerminalSfxOn(nextMode === "console");
+    setStaticHelpOpen(false);
   }
 
   return (
@@ -112,6 +130,10 @@ function App() {
       )}
 
       {started && viewMode === "static" && <StaticPortfolio />}
+
+      {started && viewMode === "static" && staticHelpOpen && (
+        <HelpPopup onClose={() => setStaticHelpOpen(false)} />
+      )}
     </>
   )
 }

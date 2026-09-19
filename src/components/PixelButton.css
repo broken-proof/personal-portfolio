@@ -1,0 +1,80 @@
+.pixel_button {
+  display: inline-block;
+  padding: 12px 16px;
+  border: 0;
+  color: var(--px-ink);
+  background: var(--px-surface-solid);
+  box-shadow: var(--px-frame), var(--px-drop);
+  font-family: var(--font-pixel-head);
+  font-size: 0.62rem;
+  line-height: 1.4;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.pixel_button:hover,
+.pixel_button:focus-visible {
+  outline: none;
+  color: var(--px-accent);
+  box-shadow: var(--px-frame-accent), var(--px-drop);
+  transform: translate(-2px, -2px);
+}
+
+.pixel_button:active {
+  box-shadow: var(--px-frame-accent);
+  transform: translate(var(--px), var(--px));
+}
+
+.pixel_button_primary {
+  color: var(--px-on-accent);
+  background: var(--px-accent);
+}
+
+.pixel_button_primary:hover,
+.pixel_button_primary:focus-visible {
+  color: var(--px-on-accent);
+  background: var(--px-yellow);
+  box-shadow: var(--px-frame), var(--px-drop);
+}
+
+/* Compact, flat variant for the nav bar: no drop shadow, highlight when active. */
+.pixel_button_nav {
+  padding: 6px 10px;
+  background: transparent;
+  box-shadow: none;
+  font-family: var(--font-pixel-body);
+  font-size: 1.25rem;
+  color: var(--px-muted);
+}
+
+.pixel_button_nav:hover,
+.pixel_button_nav:focus-visible {
+  box-shadow: none;
+  transform: none;
+  color: var(--px-accent);
+}
+
+.pixel_button.is_active {
+  color: var(--px-on-accent);
+  background: var(--px-accent);
+}
+
+/* Square button holding a <PixelIcon>. */
+.pixel_button_icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+
+.pixel_button_icon .pixel_icon {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel_button:hover,
+  .pixel_button:focus-visible,
+  .pixel_button:active {
+    transform: none;
+  }
+}

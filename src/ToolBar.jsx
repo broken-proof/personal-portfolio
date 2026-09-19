@@ -1,9 +1,6 @@
-import volon from './assets/icons/volumeon.png'
-import voloff from './assets/icons/volumeoff.png'
-import fullscreenon from './assets/icons/fullscreenon.png'
-import fullscreenoff from './assets/icons/fullscreenoff.png'
-import questionmark from './assets/icons/helpmark.png'
 import { useState } from 'react'
+import PixelButton from './components/PixelButton'
+import PixelIcon from './components/PixelIcon'
 
 function ToolBar({ setIsMuted, isMuted, onHelp, viewMode, setViewMode }) {
 
@@ -26,52 +23,46 @@ function ToolBar({ setIsMuted, isMuted, onHelp, viewMode, setViewMode }) {
   };
 
   return (<aside className="settings_icons" aria-label="System controls">
-    <div className="toolbar_header">
-      <span className="toolbar_indicator" aria-hidden="true" />
-      <span>SYS // CTRL</span>
-    </div>
-
     {/* Mute/UnMute button */}
-    <button className="toolbar_button"
+    <PixelButton as="button" type="button" variant="icon"
       aria-label={isMuted ? 'Turn sound on' : 'Mute sound'}
+      title={isMuted ? 'Turn sound on' : 'Mute sound'}
       onClick={() => { setIsMuted(!isMuted) }}>
-      {/* Conditional Rendering based on isMuted State */}
-      {isMuted ?
-        <img src={voloff} alt="volume off" className="pixel_icon" />
-        : <img src={volon} alt="volume on" className="pixel_icon" />}
-    </button>
+      <PixelIcon name={isMuted ? 'volumeOff' : 'volumeOn'} />
+    </PixelButton>
 
     {/* Fullscreen button */}
-    <button className="toolbar_button"
+    <PixelButton as="button" type="button" variant="icon"
       aria-label={fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+      title={fullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
       onClick={() => { toggleFullscreen() }}>
-      {/* Conditional maximize/minimize icons based on fullscreen state */}
-      {fullscreen ?
-        <img src={fullscreenoff} alt="Fullscreen Off" className="pixel_icon" />
-        : <img src={fullscreenon} alt="Fullscreen On" className="pixel_icon" />
-      }
-    </button>
+      <PixelIcon name={fullscreen ? 'fullscreenExit' : 'fullscreenEnter'} />
+    </PixelButton>
 
-    <button
-      className={`toolbar_button mode_button ${viewMode === 'console' ? 'active' : ''}`}
+    <PixelButton as="button" type="button" variant="icon"
+      active={viewMode === 'console'}
       aria-pressed={viewMode === 'console'}
+      aria-label="Console view"
+      title="Console view"
       onClick={() => setViewMode('console')}
     >
-      <span>Console View</span>
-    </button>
+      <PixelIcon name="console" />
+    </PixelButton>
 
-    <button
-      className={`toolbar_button mode_button ${viewMode === 'static' ? 'active' : ''}`}
+    <PixelButton as="button" type="button" variant="icon"
+      active={viewMode === 'static'}
       aria-pressed={viewMode === 'static'}
+      aria-label="Static view"
+      title="Static view"
       onClick={() => setViewMode('static')}
     >
-      <span>Static View</span>
-    </button>
+      <PixelIcon name="page" />
+    </PixelButton>
 
     {/* Help button always stays */}
-    <button className="toolbar_button" aria-label="Open help" onClick={onHelp}>
-      <img src={questionmark} alt="help" className="pixel_icon" />
-    </button>
+    <PixelButton as="button" type="button" variant="icon" aria-label="Open help" title="Open help" onClick={onHelp}>
+      <PixelIcon name="help" />
+    </PixelButton>
 
   </aside>)
 }

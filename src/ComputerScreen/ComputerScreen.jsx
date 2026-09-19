@@ -109,7 +109,7 @@ Type 'exit', or press Ctrl + D (or ⌘ + D on Mac) to shut down.`
   const rainTimeoutRef = useRef(null)
 
   function generateMatrixRainFrame() {
-    const columns = 35;
+    const columns = 28;
     const rows = 36;
     const characters = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 

@@ -1,0 +1,6 @@
+.pixel_panel {
+  margin: var(--px);
+  padding: 22px;
+  background: var(--px-surface);
+  box-shadow: var(--px-frame), var(--px-drop);
+}
