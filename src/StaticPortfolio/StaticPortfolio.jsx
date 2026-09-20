@@ -11,6 +11,8 @@ import AchievementItem from './components/AchievementItem'
 import ProjectCard from './components/ProjectCard'
 import SkillGroup from './components/SkillGroup'
 import PixelButton from '../components/PixelButton'
+import HeroAvatar from './components/HeroAvatar'
+import ContactForm from './components/ContactForm'
 
 function StaticPortfolio() {
   const [activeSection, setActiveSection] = useState('about')
@@ -68,16 +70,19 @@ function StaticPortfolio() {
       </nav>
 
       <header className="portfolio_hero">
-        <p className="eyebrow"><span className="eyebrow_name">Shivam OS</span><span className="eyebrow_version">V1</span></p>
-        <h1>Shivam Murawala</h1>
-        <p className="hero_text">
-          I build thoughtful digital experiences that blend engineering, design, and systems thinking.
-          I enjoy solving real problems with clean interfaces, creative ideas, and practical execution.
-        </p>
-        <div className="hero_actions">
-          <PixelButton variant="primary" href="#projects">View Projects</PixelButton>
-          <PixelButton href="#contact">Get In Touch</PixelButton>
+        <div className="hero_copy">
+          <p className="eyebrow"><span className="eyebrow_name">Shivam OS</span><span className="eyebrow_version">V1</span></p>
+          <h1>Shivam Murawala</h1>
+          <p className="hero_text">
+            I build thoughtful digital experiences that blend engineering, design, and systems thinking.
+            I enjoy solving real problems with clean interfaces, creative ideas, and practical execution.
+          </p>
+          <div className="hero_actions">
+            <PixelButton variant="primary" href="#projects">View Projects</PixelButton>
+            <PixelButton href="#contact">Get In Touch</PixelButton>
+          </div>
         </div>
+        <HeroAvatar />
       </header>
 
       <section className="portfolio_section" id="about">
@@ -129,6 +134,7 @@ function StaticPortfolio() {
           <a href="https://www.linkedin.com/in/shivam-murawala-b9141829b/" target="_blank" rel="noreferrer">LinkedIn</a> |{' '}
           <a href="https://github.com/broken-proof" target="_blank" rel="noreferrer">GitHub</a>
         </p>
+        <ContactForm />
       </section>
 
       <footer className="portfolio_footer">

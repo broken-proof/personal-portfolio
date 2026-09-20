@@ -12,8 +12,8 @@ html {
   margin: 0 auto 64px;
   padding: 104px 98px 52px;
   color: var(--px-ink);
-  font-family: var(--font-pixel-body);
-  font-size: 1.3rem;
+  font-family: var(--font-text);
+  font-size: 1rem;
   animation: portfolioFadeIn 0.65s steps(6) both;
 }
 
@@ -72,8 +72,15 @@ html {
 }
 
 .portfolio_hero {
-  max-width: 760px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 48px;
   padding: 28px 0 68px;
+}
+
+.hero_copy {
+  max-width: 620px;
 }
 
 .eyebrow {
@@ -93,8 +100,8 @@ html {
 .hero_text {
   max-width: 680px;
   color: var(--px-muted);
-  font-size: 1.5rem;
-  line-height: 1.35;
+  font-size: 1.1rem;
+  line-height: 1.7;
 }
 
 .hero_actions {
@@ -122,13 +129,13 @@ html {
 .portfolio_section p,
 .portfolio_section li {
   color: var(--px-muted);
-  font-size: 1.35rem;
-  line-height: 1.35;
+  font-size: 1rem;
+  line-height: 1.7;
 }
 
 .portfolio_section strong {
   color: var(--px-ink);
-  font-weight: 400;
+  font-weight: 600;
 }
 
 .experience_item + .experience_item,
@@ -140,14 +147,14 @@ html {
 .project_card h3 {
   margin: 0 0 6px;
   color: var(--px-yellow);
-  font-size: 1.6rem;
-  font-weight: 400;
-  line-height: 1.2;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.4;
 }
 
 .experience_item > p {
   color: var(--px-accent);
-  font-size: 1.2rem;
+  font-size: 0.9rem;
 }
 
 .experience_item ul,
@@ -207,8 +214,8 @@ html {
   padding-top: 22px;
   border-top: 2px dashed var(--px-line);
   color: var(--px-dim);
-  font-size: 1.1rem;
-  line-height: 1.4;
+  font-size: 0.8rem;
+  line-height: 1.6;
 }
 
 .portfolio_footer a {
@@ -245,10 +252,13 @@ html {
   .nav_links .pixel_button {
     flex: 0 0 auto;
     padding: 6px 8px;
-    font-size: 1.1rem;
+    font-size: 0.8rem;
   }
 
   .portfolio_hero {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 36px;
     padding-bottom: 44px;
   }
 

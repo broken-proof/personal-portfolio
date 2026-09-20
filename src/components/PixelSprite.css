@@ -1,0 +1,37 @@
+.pixel_sprite {
+  flex: 0 0 auto;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  image-rendering: pixelated;
+}
+
+.pixel_sprite_animated {
+  animation-name: pixelSpritePlay;
+  animation-iteration-count: infinite;
+}
+
+@keyframes pixelSpritePlay {
+  to {
+    background-position-x: var(--sprite-end);
+  }
+}
+
+.pixel_sprite_placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: var(--px) dashed var(--px-line);
+  color: var(--px-dim);
+  font-family: var(--font-pixel-body);
+  font-size: 1rem;
+  text-align: center;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Sprites can opt out of this with `alwaysAnimate` in src/sprites/index.js */
+@media (prefers-reduced-motion: reduce) {
+  .pixel_sprite_animated:not(.pixel_sprite_always) {
+    animation: none;
+  }
+}

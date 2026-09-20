@@ -26,10 +26,8 @@ function App() {
   const [terminalSfxOn, setTerminalSfxOn] = useState(true)
 
   //Object for all Audio Controls
+  //(The looping background sound starts itself once inside useAudioManager)
   const audio = useAudioManager(terminalSfxOn)
-
-  //Start browser audio right away if allowed, otherwise it'll turn on after start button
-  audio.playEmpty()
 
   //Variable for rendering after start button is pressed
   const [started, setStarted] = useState(false);
@@ -39,6 +37,18 @@ function App() {
 
   //Mute system when isMuted variable changes
   useEffect(() => { Howler.mute(isMuted) }, [isMuted])
+
+  //Click sound for every button on the page (Howler.mute above silences it when muted).
+  //Elements marked data-silent-click (the mute button) are skipped so muting doesn't make a click.
+  const { playClick } = audio
+  useEffect(() => {
+    const handleClick = (event) => {
+      const button = event.target.closest?.('button, .pixel_button')
+      if (button && !button.closest('[data-silent-click]')) playClick()
+    }
+    document.addEventListener('click', handleClick)
+    return () => document.removeEventListener('click', handleClick)
+  }, [playClick])
 
   //Function for Help Button
   function handleHelpRequest() {
@@ -79,7 +89,6 @@ function App() {
           <button className="startbutton"
             onClick={() => {
               setStarted(true)
-              audio.playEmpty();
               audio.startNoise();
             }}
           >

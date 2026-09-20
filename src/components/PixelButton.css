@@ -42,8 +42,8 @@
   padding: 6px 10px;
   background: transparent;
   box-shadow: none;
-  font-family: var(--font-pixel-body);
-  font-size: 1.25rem;
+  font-family: var(--font-text);
+  font-size: 0.9rem;
   color: var(--px-muted);
 }
 

@@ -1,0 +1,21 @@
+/* Screenshot at the top of a project card, framed like the rest of the pixel UI.
+   Screenshots are not pixel art, so they are scaled smoothly (no pixelated rendering). */
+.project_image {
+  aspect-ratio: 15 / 8;
+  margin: var(--px) var(--px) 18px;
+  overflow: hidden;
+  background: var(--px-surface-solid);
+  box-shadow: var(--px-frame);
+}
+
+.project_image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top left;
+}
+
+.pixel_panel.project_card:hover .project_image {
+  box-shadow: var(--px-frame-accent);
+}

@@ -14,9 +14,13 @@
   --px-surface: rgba(14, 10, 36, 0.78);
   --px-surface-solid: rgba(10, 7, 30, 0.92);
   --px-on-accent: #0a0620;
+  --px-error: #ff7a8a;
+  --px-success: #7dffb0;
 
   --font-pixel-head: "Press Start 2P", "Courier New", monospace;
   --font-pixel-body: "VT323", "Courier New", monospace;
+  /* Readable old-school text for the static site; VT323 above stays for the terminal. */
+  --font-text: "IBM Plex Mono", "Courier New", monospace;
 
   /* Stepped-corner pixel border: four offset shadows leave the corners notched, no clip-path needed. */
   --px-frame:

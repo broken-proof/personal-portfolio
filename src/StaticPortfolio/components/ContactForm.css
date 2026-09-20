@@ -1,0 +1,170 @@
+.contact_form {
+  display: grid;
+  gap: 24px;
+  margin-top: 36px;
+  padding: 28px;
+}
+
+.contact_header h3 {
+  margin: 0 0 8px;
+  color: var(--px-yellow);
+  font-family: var(--font-pixel-head);
+  font-size: 0.85rem;
+  font-weight: 400;
+  line-height: 1.5;
+  text-shadow: 3px 3px 0 var(--px-line);
+}
+
+.portfolio_section .contact_header p {
+  margin: 0;
+  color: var(--px-muted);
+  font-size: 0.95rem;
+}
+
+/* Name and Email sit side by side on wide screens */
+.contact_row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.contact_field {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.contact_label_row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.contact_field label {
+  color: var(--px-accent);
+  font-family: var(--font-pixel-head);
+  font-size: 0.6rem;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.contact_hint {
+  color: var(--px-dim);
+  font-size: 0.8rem;
+}
+
+/* The pixel frame is drawn outside the box, so inset the field by one pixel unit to keep it from touching the edge */
+.contact_field input,
+.contact_field textarea {
+  box-sizing: border-box;
+  width: calc(100% - var(--px) * 2);
+  margin: 0 var(--px);
+  padding: 14px 16px;
+  border: 0;
+  border-radius: 0;
+  color: var(--px-ink);
+  background: rgba(7, 4, 26, 0.7);
+  box-shadow: var(--px-frame);
+  font-family: var(--font-text);
+  font-size: 1rem;
+  line-height: 1.5;
+  transition: background 120ms steps(2);
+}
+
+.contact_field input::placeholder,
+.contact_field textarea::placeholder {
+  color: var(--px-dim);
+  opacity: 1;
+}
+
+.contact_field textarea {
+  min-height: 160px;
+  resize: vertical;
+}
+
+.contact_field input:hover,
+.contact_field textarea:hover {
+  background: rgba(7, 4, 26, 0.9);
+}
+
+.contact_field input:focus,
+.contact_field textarea:focus {
+  outline: none;
+  background: rgba(7, 4, 26, 0.95);
+  box-shadow: var(--px-frame-accent);
+}
+
+/* Stop browser autofill from painting fields white/blue */
+.contact_field input:-webkit-autofill {
+  -webkit-text-fill-color: var(--px-ink);
+  caret-color: var(--px-ink);
+  transition: background-color 9999s ease-out;
+}
+
+.contact_field [aria-invalid='true'] {
+  box-shadow:
+    0 calc(var(--px) * -1) 0 0 var(--px-error),
+    0 var(--px) 0 0 var(--px-error),
+    calc(var(--px) * -1) 0 0 0 var(--px-error),
+    var(--px) 0 0 0 var(--px-error);
+}
+
+.portfolio_section .contact_error {
+  margin: 0;
+  color: var(--px-error);
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+/* Honeypot: invisible to people, present for bots */
+.contact_botcheck {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.contact_actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  padding-top: 4px;
+}
+
+.contact_actions .pixel_button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.portfolio_section .contact_status {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.portfolio_section .contact_status_success {
+  color: var(--px-success);
+}
+
+.portfolio_section .contact_status_error {
+  color: var(--px-error);
+}
+
+@media (max-width: 760px) {
+  .contact_form {
+    padding: 20px 16px;
+  }
+
+  .contact_row {
+    grid-template-columns: 1fr;
+  }
+
+  .contact_actions .pixel_button {
+    width: 100%;
+    text-align: center;
+  }
+}

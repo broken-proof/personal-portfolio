@@ -24,7 +24,7 @@ function ToolBar({ setIsMuted, isMuted, onHelp, viewMode, setViewMode }) {
 
   return (<aside className="settings_icons" aria-label="System controls">
     {/* Mute/UnMute button */}
-    <PixelButton as="button" type="button" variant="icon"
+    <PixelButton as="button" type="button" variant="icon" data-silent-click
       aria-label={isMuted ? 'Turn sound on' : 'Mute sound'}
       title={isMuted ? 'Turn sound on' : 'Mute sound'}
       onClick={() => { setIsMuted(!isMuted) }}>
