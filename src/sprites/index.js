@@ -20,5 +20,5 @@ export const sprites = {
     frames: 8,
     frameMs: 700,
     alwaysAnimate: true,
-  },
+  }
 }

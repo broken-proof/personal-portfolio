@@ -1,0 +1,47 @@
+/* Pixel polaroid with a photo dropped into its window.
+
+   pixelframe.png is 1000x1000 with transparent margins. The polaroid itself sits at x 292-707, y 251-748
+   (416 x 498 px), and its photo window (inside the black inner border) is x 336-651, y 297-616.
+   The frame is shown as a background cropped to the polaroid, and the photo is an <img> placed on top of the
+   frame's white window using percentages of that cropped box.
+
+   HOW TO ADJUST THE FIT: change the variables below.
+   - Photo too far left/right:  --photo-left   (percent of the polaroid width)
+   - Photo too high/low:        --photo-top    (percent of the polaroid height)
+   - Photo too wide/narrow:     --photo-width
+   - Photo too tall/short:      --photo-height
+   - Which part of the photo is visible: --photo-focus (x% y%; e.g. 50% 20% shows more of the top)
+   - Overall size: --polaroid-width. Multiples of 52px keep the pixel art crisp: 208px, 260px, 312px, 364px, 416px */
+.polaroid {
+  --polaroid-width: 260px;
+  --photo-left: 10.58%;
+  --photo-top: 9.24%;
+  --photo-width: 75.96%;
+  --photo-height: 64.26%;
+  --photo-focus: 50% 25%;
+
+  position: relative;
+  width: var(--polaroid-width);
+  max-width: 100%;
+  aspect-ratio: 416 / 498;
+  margin: 0;
+  background-repeat: no-repeat;
+  /* 1000 / 416 = 240.38%: enlarge the 1000px image so only the polaroid fills the box, centered on it */
+  background-size: 240.38% auto;
+  background-position: 50% 50%;
+  image-rendering: pixelated;
+  filter: drop-shadow(6px 6px 0 var(--px-shadow));
+}
+
+.polaroid_photo {
+  position: absolute;
+  top: var(--photo-top);
+  left: var(--photo-left);
+  display: block;
+  width: var(--photo-width);
+  height: var(--photo-height);
+  object-fit: cover;
+  object-position: var(--photo-focus);
+  background: var(--px-surface-solid);
+  image-rendering: auto;
+}

@@ -1,0 +1,22 @@
+.socials h3 {
+  margin: 0 0 20px;
+  color: var(--px-yellow);
+  font-family: var(--font-pixel-head);
+  font-size: 0.85rem;
+  font-weight: 400;
+  line-height: 1.5;
+  text-shadow: 3px 3px 0 var(--px-line);
+}
+
+.social_links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+/* Icon and label side by side inside each pixel button */
+.social_links .pixel_button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}

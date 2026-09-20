@@ -88,7 +88,7 @@ html {
 }
 
 .portfolio_hero h1 {
-  margin: 0 0 22px;
+  margin: 0 0 15px;
   color: var(--px-ink);
   font-family: var(--font-pixel-head);
   font-size: clamp(1.5rem, 4.6vw, 2.9rem);
@@ -116,6 +116,13 @@ html {
   padding: 42px 0;
 }
 
+.about_layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 48px;
+}
+
 .portfolio_section h2 {
   margin: 0 0 24px;
   color: var(--px-ink);
@@ -138,8 +145,8 @@ html {
   font-weight: 600;
 }
 
-.experience_item + .experience_item,
-.project_card + .project_card {
+.experience_item+.experience_item,
+.project_card+.project_card {
   margin-top: 24px;
 }
 
@@ -152,7 +159,7 @@ html {
   line-height: 1.4;
 }
 
-.experience_item > p {
+.experience_item>p {
   color: var(--px-accent);
   font-size: 0.9rem;
 }
@@ -178,7 +185,7 @@ html {
   gap: 28px;
 }
 
-.project_grid .project_card + .project_card {
+.project_grid .project_card+.project_card {
   margin-top: var(--px);
 }
 
@@ -201,11 +208,11 @@ html {
   border-bottom: 2px dashed var(--px-line);
 }
 
-#contact a {
+#contact a:not(.pixel_button) {
   color: var(--px-accent);
 }
 
-#contact a:hover {
+#contact a:not(.pixel_button):hover {
   color: var(--px-yellow);
 }
 
@@ -264,6 +271,12 @@ html {
 
   .project_grid {
     grid-template-columns: 1fr;
+  }
+
+  .about_layout {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 32px;
   }
 }
 

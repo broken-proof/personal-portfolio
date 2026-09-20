@@ -13,6 +13,9 @@ import SkillGroup from './components/SkillGroup'
 import PixelButton from '../components/PixelButton'
 import HeroAvatar from './components/HeroAvatar'
 import ContactForm from './components/ContactForm'
+import SocialLinks from './components/SocialLinks'
+import PolaroidPhoto from './components/PolaroidPhoto'
+import portrait from '../assets/personalImages/portrait.jpeg'
 
 function StaticPortfolio() {
   const [activeSection, setActiveSection] = useState('about')
@@ -72,10 +75,10 @@ function StaticPortfolio() {
       <header className="portfolio_hero">
         <div className="hero_copy">
           <p className="eyebrow"><span className="eyebrow_name">Shivam OS</span><span className="eyebrow_version">V1</span></p>
-          <h1>Shivam Murawala</h1>
+          <h1>Hey There!!! I'm Shivam</h1>
           <p className="hero_text">
-            I build thoughtful digital experiences that blend engineering, design, and systems thinking.
-            I enjoy solving real problems with clean interfaces, creative ideas, and practical execution.
+            Grade 12 developer who thinks Math, CS and Business are cool. I like building apps, solving math/cp problems,
+            thinking too much and drinking Black Coffee while doing it.
           </p>
           <div className="hero_actions">
             <PixelButton variant="primary" href="#projects">View Projects</PixelButton>
@@ -87,10 +90,16 @@ function StaticPortfolio() {
 
       <section className="portfolio_section" id="about">
         <SectionHeader title="About" />
-        <p>
-          I’m a developer focused on building polished experiences with a strong technical foundation.
-          My work sits at the intersection of software engineering, creative design, and product thinking.
-        </p>
+        <div className="about_layout">
+          <p>
+            My name is Shivam Murawala and I'm a senior @ Woburn CI. I started coding around 2 years ago and it's been pretty fun so far.
+            I think tech basically runs the world so I'm trying to learn about this field as much as I can. If your a recruiter pls hire me{":)"} If your a fellow developer, check out the
+            terminal I made {"(promise it's not as vibecoded as this page)"}. When I'm AFK, I might be watching
+            anime or the NBA, listening to music, sketching my thoughts, or doomscrolling. You also might catch me playing basketball, larping,
+            or watching dog videos (since dogs are superior to cats, obviously).
+          </p>
+          <PolaroidPhoto src={portrait} alt="Portrait of Shivam" />
+        </div>
       </section>
 
 
@@ -128,12 +137,7 @@ function StaticPortfolio() {
 
       <section className="portfolio_section" id="contact">
         <SectionHeader title="Contact" />
-        <p><strong>Shivam Murawala</strong></p>
-        <p>
-          <a href="mailto:shivammurawala2810@gmail.com">shivammurawala2810@gmail.com</a> |{' '}
-          <a href="https://www.linkedin.com/in/shivam-murawala-b9141829b/" target="_blank" rel="noreferrer">LinkedIn</a> |{' '}
-          <a href="https://github.com/broken-proof" target="_blank" rel="noreferrer">GitHub</a>
-        </p>
+        <SocialLinks />
         <ContactForm />
       </section>
 

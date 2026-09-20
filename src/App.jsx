@@ -46,8 +46,9 @@ function App() {
       const button = event.target.closest?.('button, .pixel_button')
       if (button && !button.closest('[data-silent-click]')) playClick()
     }
-    document.addEventListener('click', handleClick)
-    return () => document.removeEventListener('click', handleClick)
+    //Capture phase: some popups stop click events from bubbling up to the document, which would skip the sound
+    document.addEventListener('click', handleClick, true)
+    return () => document.removeEventListener('click', handleClick, true)
   }, [playClick])
 
   //Function for Help Button

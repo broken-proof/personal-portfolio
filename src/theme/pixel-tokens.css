@@ -14,6 +14,8 @@
   --px-surface: rgba(14, 10, 36, 0.78);
   --px-surface-solid: rgba(10, 7, 30, 0.92);
   --px-on-accent: #0a0620;
+  /* Dark layer over the star background in Static View: higher alpha = easier to read text, fewer visible stars */
+  --px-scrim: rgba(5, 4, 15, 0.6);
   --px-error: #ff7a8a;
   --px-success: #7dffb0;
 

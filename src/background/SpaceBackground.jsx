@@ -152,6 +152,7 @@ function SpaceBackground({ audio, screen, screenControl, viewMode = 'console' })
           position={viewMode === 'static' ? [0, -0.5, 38] : [0, -3, 38]}
           scale={viewMode === 'static' ? 1.3 : 5}
           screenControl={screenControl}
+          screen={screen}
           rotation={[0, Math.PI * 1.5, 0]}
           audio={audio}
         ></Retro>

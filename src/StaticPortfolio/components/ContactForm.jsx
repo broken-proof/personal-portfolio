@@ -115,7 +115,7 @@ function ContactForm() {
     <PixelPanel as="form" className="contact_form" onSubmit={handleSubmit} noValidate>
       <header className="contact_header">
         <h3>Send me a message</h3>
-        <p>Have a question or an idea? Write to me here and I will reply by email.</p>
+        <p>Have a question or wanna be friends? Write to me here and I will reply by email.</p>
       </header>
 
       <div className="contact_row">

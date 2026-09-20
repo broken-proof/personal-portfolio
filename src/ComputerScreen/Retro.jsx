@@ -10,9 +10,8 @@ Title: Retro computer
 import { useEffect } from 'react'
 import { useGLTF, Center } from '@react-three/drei'
 import * as THREE from 'three'
-import { useAudioManager } from '../Sounds'
 
-export default function Retro({ screenControl, audio, ...props }) {
+export default function Retro({ screenControl, screen, audio, ...props }) {
   const { nodes, materials } = useGLTF('./computer.glb')
 
   useEffect(() => {
@@ -26,16 +25,19 @@ export default function Retro({ screenControl, audio, ...props }) {
     });
   }, [materials]);
 
+  //The computer only reacts to clicks while it is off; once the terminal is open, clicking it does nothing
+  const clickable = screen === "off"
+
   const handleScreenClick = (e) => {
     e.stopPropagation();
-    if (screenControl) { screenControl("on"); audio.playPowerOn(); audio.computerBoot() }
+    if (clickable && screenControl) { screenControl("on"); audio.playPowerOn(); audio.computerBoot() }
   }
   return (
 
 
     <group {...props} dispose={null}
       onClick={handleScreenClick}
-      onPointerOver={() => { document.body.style.cursor = 'pointer' }}
+      onPointerOver={() => { if (clickable) document.body.style.cursor = 'pointer' }}
       onPointerOut={() => { document.body.style.cursor = 'auto' }}
     >
       <Center>

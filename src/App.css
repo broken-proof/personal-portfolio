@@ -20,7 +20,7 @@
   inset: 0;
   z-index: 1;
   pointer-events: none;
-  background: rgba(5, 4, 15, 0.42);
+  background: var(--px-scrim);
   animation: staticOverlayFadeIn 280ms ease-out;
 }
 
